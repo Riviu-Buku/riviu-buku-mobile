@@ -68,11 +68,11 @@ Terima kasih telah membaca cerita Riviu Buku, selamat membaca dan mereview!😇�
 
 ## 📃 Daftar Modul Yang Akan Diimplementasikan 📃
 
-- 📕 Modul untuk me-review buku yang oleh pengguna yang disertai oleh leaderboard berdasarkan review terbaik menggunakan fitur upvote dan downvote;</p>
-- 📕 Modul koleksi, kategori, dan favorit yang memungkinkan pengguna untuk menyimpan daftar buku favorit dan fungsi untuk menambahkan buku ke album/wishlist pengguna serta upload buku untuk bisa di review;</p>
-- 📕 Modul homepage yang menyajikan rekomendasi berdasarkan jumlah likes pada suatu kategori buku oleh pengguna;</p>
-- 📕 Modul wishlist pada profil pengguna yang berisi katalog ulasan yang telah ditulis oleh pengguna, dan kategori buku favorit;</p>
-- 📕 Modul Album Buku dimana pengguna bisa mengumpulkan berbagai buku ke dalam suatu folder contohnya buku a,b, dan c yang mencakup kurikulum IPS, serta dengan implementasinya di dalam kotak pencarian homepage.</p>
+- 📕 Modul untuk me-review buku yang oleh pengguna yang disertai oleh leaderboard berdasarkan review terbaik menggunakan fitur upvote dan downvote; dikerjakan oleh Samuel Taniel Mulyadi;</p> 
+- 📕 Modul koleksi, kategori, dan favorit yang memungkinkan pengguna untuk menyimpan daftar buku favorit dan fungsi untuk menambahkan buku ke album/wishlist pengguna serta upload buku untuk bisa di review; dikerjakan oleh Ken Balya</p>
+- 📕 Modul homepage yang menyajikan rekomendasi berdasarkan jumlah likes pada suatu kategori buku oleh pengguna; dikerjakan oleh Khansa Mahira</p>
+- 📕 Modul wishlist pada profil pengguna yang berisi katalog ulasan yang telah ditulis oleh pengguna, dan kategori buku favorit; dikerjakan oleh Syazantri Salsabila</p>
+- 📕 Modul Album Buku dimana pengguna bisa mengumpulkan berbagai buku ke dalam suatu folder contohnya buku a,b, dan c yang mencakup kurikulum IPS, serta dengan implementasinya di dalam kotak pencarian homepage; dikerjakan oleh Emmanuel Patrick.</p>
 
 <p></p>
 
@@ -89,6 +89,23 @@ Referensi: Docs Asisten Dosen
 
 ## 🧑‍🦳 Role atau Peran Pengguna Beserta Deskripsinya 🧑‍🦳
 Pengguna aplikasi hanya ada satu jenis, semua pengguna berkedudukan sama, yaitu dapat mengakses semua buku yang ada, melihat dan membuat review buku dan juga membuat album buku yang bisa dioptimalkan sesuai preferensi pengguna.
+
+<hr>
+<a name="Integrasi Web Service"></a>
+
+## 💻 Alur Pengintegrasian dengan Web Service 💻
+Berikut adalah langkah-langkah yang akan diambil untuk mengintegrasikan aplikasi dengan server web:
+
+1. Langkah pertama yang kami lakukan adalah membuat sebuah kelas pembungkus (wrapper class) dengan menggunakan pustaka (library) http dan map untuk mendukung penggunaan autentikasi berbasis cookie pada aplikasi.
+2. Selanjutnya, kami mengimplementasikan REST API pada Django (views.py) yang telah dibuat sebelumnya dengan menggunakan JsonResponse atau Django JSON Serializer.
+3. Setelah itu, kami melanjutkan dengan melakukan integrasi desain front-end aplikasi berdasarkan desain web yang telah ditentukan.
+4. Terakhir, kami melakukan integrasi antara front-end dan back-end dengan menggunakan konsep HTTP asynchronous.
+
+<hr>
+<a name="berita-acara"></a>
+
+## 🌐 Tautan Berita Acara 🌐
+Tautan: https://univindonesia-my.sharepoint.com/:x:/g/personal/khansa_mahira_office_ui_ac_id/EfMk6a4yS5VJvq2IBvBQgSwB8pGJL7S7XC3No9OCEtSIcA?e=bwasXy
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
