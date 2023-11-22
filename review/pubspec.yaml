@@ -1,6 +1,7 @@
 name: review
 description: A new Flutter package project.
 version: 0.0.1
+publish_to: 'none'
 homepage:
 
 environment:
@@ -13,7 +14,7 @@ dependencies:
 
   riviu_buku:
     path: ../.
-
+    
 dev_dependencies:
   flutter_test:
     sdk: flutter

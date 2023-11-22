@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:riviu_buku/screens/login.dart';
-import 'package:riviu_buku/screens/menu.dart';
+import 'package:riviu_buku/authentication/login.dart';
+import 'package:riviu_buku/authentication/menu.dart';
 import 'package:provider/provider.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 

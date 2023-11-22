@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:riviu_buku/screens/homepage_book/list_book.dart';
+import 'package:homepage/list_book.dart';
 // Impor drawer widget
 
 class MyHomePage extends StatelessWidget {
@@ -105,7 +105,7 @@ class ShopCard extends StatelessWidget {
           // }
           if (item.name == "Lihat Produk") {
             Navigator.push(context,
-                MaterialPageRoute(builder: (context) => const BookPage()));
+                MaterialPageRoute(builder: (context) => const Homepage()));
           }
 
         },

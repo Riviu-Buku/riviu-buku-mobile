@@ -1,8 +1,8 @@
-import 'package:riviu_buku/screens/menu.dart';
+import 'package:riviu_buku/authentication/menu.dart';
 import 'package:flutter/material.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
-import 'package:riviu_buku/widgets/left_drawer.dart';
+import 'package:riviu_buku/left_drawer.dart';
 
 void main() {
     runApp(const LoginApp());
@@ -41,7 +41,6 @@ class _LoginPageState extends State<LoginPage> {
             appBar: AppBar(
                 title: const Text('Login'),
             ),
-            drawer: const LeftDrawer(), //NOTE: disuruh bu Dinial untuk jadi endDrawer tapi ku ganti lagi jadi drawer
             body: Container(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
@@ -72,8 +71,10 @@ class _LoginPageState extends State<LoginPage> {
                                 // Untuk menyambungkan Android emulator dengan Django pada localhost,
                                 // gunakan URL http://10.0.2.2/
                                 final response = await request.login(
-                                  // "http://127.0.0.1:8000/auth/login/", 
-                                  "http://samuel-taniel-tutorial.pbp.cs.ui.ac.id/auth/login/", 
+                                  "http://127.0.0.1:8000/auth/login/", 
+                                  // "http://samuel-taniel-tutorial.pbp.cs.ui.ac.id/auth/login/", 
+                                  // TODO: 
+                                  // 'https://https://riviu-buku-d07-tk.pbp.cs.ui.ac.id/auth/login/'
                                 {
                                 'username': username,
                                 'password': password,
