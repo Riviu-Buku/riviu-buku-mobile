@@ -74,7 +74,7 @@ class _LoginPageState extends State<LoginPage> {
                                   "http://127.0.0.1:8000/auth/login/", 
                                   // "http://samuel-taniel-tutorial.pbp.cs.ui.ac.id/auth/login/", 
                                   // TODO: 
-                                  // 'https://https://riviu-buku-d07-tk.pbp.cs.ui.ac.id/auth/login/'
+                                  // 'https://https://riviu-buku-d07-tk.pbp.cs.ui.ac.id/auth/login/',
                                 {
                                 'username': username,
                                 'password': password,
