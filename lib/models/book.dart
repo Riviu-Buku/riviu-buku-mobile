@@ -72,8 +72,8 @@ class Fields {
     });
 
     factory Fields.fromJson(Map<String, dynamic> json) {
-      print("Parsing Fields JSON: $json");
-      print("testestestest");
+      // print("Parsing Fields JSON: $json");
+      // print("testestestest");
 /// The commented code block is assigning values to variables by extracting them from the JSON object.
 /// It is using the `json` object to access the corresponding values from the JSON data. If a value is
 /// not present in the JSON data, it assigns a default value (empty string, 0, or an empty list) to the
@@ -131,7 +131,7 @@ class Fields {
         title: json["title"] ?? "",
         author: json["author"] ?? "",
         description: json["description"] ?? "",
-        rating: json["price"]?.toDouble() ?? 0.0,
+        rating: json["rating"]?.toDouble() ?? 0.0,
         price: json["price"]?.toDouble() ?? 0.0,
         language: languageValues.map[json["language"]] ?? Language.ENGLISH,
         genres: json["genres"] ?? "",
@@ -146,8 +146,8 @@ class Fields {
         review: List<int>.from(json["review"]?.map((x) => x) ?? []), //how to print here?
         likedByUsers: List<int>.from(json["liked_by_users"]?.map((x) => x) ?? []),
       );
-      print("Parsed Fields: $fields");
-      print("seconseconseconsecond");
+      // print("Parsed Fields: $fields");
+      // print("seconseconseconsecond");
       return fields;
     }
 
