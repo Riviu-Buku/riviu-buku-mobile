@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_const_constructors, depend_on_referenced_packages, sized_box_for_whitespace
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
@@ -13,7 +11,7 @@ import 'package:provider/provider.dart';
 
 class ReviewPage extends ConsumerStatefulWidget {
   final Book book;
-  const ReviewPage({Key? key, required this.book}) : super(key: key);
+   ReviewPage({required this.book});
 
   @override
   _ReviewPageState createState () => _ReviewPageState();
