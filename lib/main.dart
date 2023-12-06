@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'package:riviu_buku/authentication/login.dart';
 import 'package:riviu_buku/authentication/menu.dart';

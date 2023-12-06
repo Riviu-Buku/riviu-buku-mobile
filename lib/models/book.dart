@@ -2,6 +2,8 @@
 //
 //     final book = bookFromJson(jsonString);
 
+// ignore_for_file: avoid_print, constant_identifier_names
+
 import 'dart:convert';
 
 List<Book> bookFromJson(String str) => List<Book>.from(json.decode(str).map((x) => Book.fromJson(x)));
