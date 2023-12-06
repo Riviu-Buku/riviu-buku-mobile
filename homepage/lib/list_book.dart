@@ -7,9 +7,12 @@ import 'package:riviu_buku/models/book.dart';
 import 'package:review/reviewpage.dart';
 import 'package:riviu_buku/left_drawer.dart';
 
+import 'package:riviu_buku/models/user.dart';
+import 'package:riviu_buku/provider/user_provider.dart';
 
 class Homepage extends StatefulWidget {
-    const Homepage({Key? key}) : super(key: key);
+    final User user;
+    const Homepage({Key? key, required this.user}) : super(key: key);
 
     @override
     _ProductPageState createState() => _ProductPageState();
@@ -64,11 +67,12 @@ Future<List<Book>> fetchBook() async {
 
 @override
 Widget build(BuildContext context) {
+  User user = widget.user;
     return Scaffold(
         appBar: AppBar(
         title: const Text('Book'),
         ),
-        drawer: LeftDrawer(),
+        drawer: LeftDrawer(user: user),
         body: FutureBuilder(
             future: fetchBook(),
             builder: (context, AsyncSnapshot snapshot) {
@@ -98,7 +102,7 @@ Widget build(BuildContext context) {
                                     MaterialPageRoute(
                                       builder: (context){
                                         return ReviewPage(
-                                          book: snapshot.data![index],
+                                          book: snapshot.data![index], user: user,
                                         );
                                       }
                                     ),

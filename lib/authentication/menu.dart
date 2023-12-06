@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:homepage/list_book.dart';
 import 'package:profile/profilepage.dart';
+import 'package:riviu_buku/models/user.dart';
 
 class MyHomePage extends StatelessWidget {
+  final User user;
+  MyHomePage(this.user);
+
   final List<ShopItem> items = [
     ShopItem("Lihat Produk", Icons.checklist),
     ShopItem("Tambah Produk", Icons.add_shopping_cart),
@@ -20,7 +24,7 @@ class MyHomePage extends StatelessWidget {
       case "Lihat Produk":
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const Homepage()),
+          MaterialPageRoute(builder: (context) => Homepage(user: user)),
         );
         break;
       case "Profile":

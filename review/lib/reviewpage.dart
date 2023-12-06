@@ -8,10 +8,13 @@ import 'package:homepage/list_book.dart';
 import 'package:riviu_buku/left_drawer.dart';
 
 import 'package:provider/provider.dart';
+import 'package:riviu_buku/models/user.dart';
+import 'package:riviu_buku/provider/user_provider.dart';
 
 class ReviewPage extends ConsumerStatefulWidget {
   final Book book;
-   ReviewPage({required this.book});
+  final User user;
+   ReviewPage({required this.book, required this.user});
 
   @override
   _ReviewPageState createState () => _ReviewPageState();
@@ -20,6 +23,7 @@ class ReviewPage extends ConsumerStatefulWidget {
 class _ReviewPageState extends ConsumerState<ReviewPage> {
 Future<List<Review>> fetchReview() async {
     // TODO: Ganti URL dan jangan lupa tambahkan trailing slash (/) di akhir URL!
+
     var url = Uri.parse(
         'http://127.0.0.1:8000/book-detail/get-review/${widget.book.pk}'
         // TODO: 
@@ -35,10 +39,6 @@ Future<List<Review>> fetchReview() async {
 
     // melakukan konversi data json menjadi object Product
     List<Review> list_review = [];
-    //TODO: Comment line dibawah (hanya nampilin 1 buku)
-    // list_book.add(Book.fromJson(data[0]));
-
-    //TODO: Uncomment line dibawah buat nampilin semua data buku (berat 100>)
     for (var d in data) {
         if (d != null) {
             list_review.add(Review.fromJson(d));
@@ -49,6 +49,7 @@ Future<List<Review>> fetchReview() async {
 
     @override
   Widget build(BuildContext context) {
+    User user = widget.user;
     return Scaffold(
       appBar: AppBar(
         title: Text('Detail Review'),
@@ -59,13 +60,23 @@ Future<List<Review>> fetchReview() async {
           },
         ),
       ),
-      drawer: LeftDrawer(),
+      drawer: LeftDrawer(user: user),
       body: SingleChildScrollView(
         child: Container(
           padding: EdgeInsets.all(20.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              //shows login username and password here
+              // Text(
+              //   //TODO: cara nampilin user
+              //   widget.user.username,
+              //   style: TextStyle(
+              //     fontSize: 18.0,
+              //     fontWeight: FontWeight.bold,
+              //   ),
+              // ),
+
               Text(
                 widget.book.fields?.title ?? "",
                 style: TextStyle(
