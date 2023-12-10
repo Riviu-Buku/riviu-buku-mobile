@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:homepage/list_book.dart';
-import 'package:profile/profilepage.dart';
+import 'package:profile/screens/profilepage.dart';
 import 'package:riviu_buku/models/user.dart';
 
 class MyHomePage extends StatelessWidget {
