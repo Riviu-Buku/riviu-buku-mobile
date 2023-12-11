@@ -39,12 +39,16 @@ class _ReviewFormPageState extends State<ReviewFormPage> {
         return Scaffold(
           appBar: AppBar(
             title: const Center(
-              child: Text(
-                'Form Review',
-              ),
+              child: Text('Form Review'),
             ),
             backgroundColor: Colors.indigo,
             foregroundColor: Colors.white,
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back),
+              onPressed: () {
+                Navigator.pop(context); // Pop the navigator when the back button is pressed
+              },
+            ),
           ),
           // NOTE: Tambahkan drawer yang sudah dibuat di sini
         drawer: LeftDrawer(user: user,),
