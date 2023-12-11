@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:riviu_buku/models/book.dart';
 import 'package:homepage/list_book.dart';
@@ -28,6 +29,7 @@ class ReviewPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            /*
             Text(
               book.fields.title,
               style: TextStyle(
@@ -44,6 +46,7 @@ class ReviewPage extends StatelessWidget {
             SizedBox(height: 10),
             Text(book.fields.coverImg ?? ""),
             // Add more details as needed
+            */
           ],
         ),
       ),

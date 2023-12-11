@@ -1,3 +1,5 @@
+// ignore_for_file: depend_on_referenced_packages, library_private_types_in_public_api, avoid_print, non_constant_identifier_names
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -19,7 +21,7 @@ Future<List<Book>> fetchBook() async {
     var url = Uri.parse(
         'http://127.0.0.1:8000/json/'
         // TODO: 
-        // 'https://https://riviu-buku-d07-tk.pbp.cs.ui.ac.id/json/'
+        // 'https://riviu-buku-d07-tk.pbp.cs.ui.ac.id/json/'
         );
     var response = await http.get(
         url,
@@ -27,13 +29,21 @@ Future<List<Book>> fetchBook() async {
     );
 
     // melakukan decode response menjadi bentuk json
+    print("fetch gitu 3");
     var data = jsonDecode(utf8.decode(response.bodyBytes));
+    print("fetch gitu 2");
 
     // melakukan konversi data json menjadi object Product
     List<Book> list_book = [];
     //TODO: Comment line dibawah (hanya nampilin 1 buku)
-    list_book.add(Book.fromJson(data[0]));
+    print("fetch gitu 1");
+    //print(data[0]);
+    list_book.add(Book.fromJson(data[103]));
+    //list_book.add(Book.fromJson(data[1]));
+    //list_book.add(Book.fromJson(data[2]));
+    //list_book.add(Book.fromJson(data[3]));
 
+    print("fetch gitu");
     //TODO: Uncomment line dibawah buat nampilin semua data buku (berat 100>)
     // for (var d in data) {
     //     if (d != null) {
@@ -69,8 +79,8 @@ Widget build(BuildContext context) {
                     );
                 } else {
                     return ListView.builder(
-                        // itemCount: snapshot.data!.length,
-                        itemCount: 1,
+                        itemCount: snapshot.data!.length,
+                        //itemCount: 1,
                         itemBuilder: (_, index) => GestureDetector(
                                 onTap: () {
                                   // Navigate to the detail item page
@@ -108,7 +118,7 @@ Widget build(BuildContext context) {
                                 ),
                             )));
                     }
-                }
+              }
             }));
     }
 }
