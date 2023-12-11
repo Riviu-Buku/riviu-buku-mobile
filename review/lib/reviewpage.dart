@@ -6,6 +6,7 @@ import 'package:riviu_buku/models/book.dart';
 import 'package:review/models/review.dart';
 import 'package:homepage/list_book.dart';
 import 'package:riviu_buku/left_drawer.dart';
+import 'package:review/review_form.dart';
 
 import 'package:provider/provider.dart';
 import 'package:riviu_buku/models/user.dart';
@@ -91,12 +92,25 @@ Future<List<Review>> fetchReview() async {
                 width: 150,
               ),
               SizedBox(height: 10),
+              Text(widget.book.fields?.author ?? ""),
+              SizedBox(height: 10),
               Text("Rating: ${widget.book.fields?.rating}"),
               SizedBox(height: 10),
               Text(widget.book.fields?.description ?? ""),
               SizedBox(height: 10),
-              Text(widget.book.fields?.author ?? ""),
-              SizedBox(height: 10),
+              
+              // buat button add review disini
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ReviewFormPage(user: user, book: widget.book),
+                    ),
+                  );
+                },
+                child: Text("Add Review"),
+              ),
               FutureBuilder(
                 future: fetchReview(),
                 builder: (context, AsyncSnapshot snapshot) {
