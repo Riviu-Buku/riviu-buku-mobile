@@ -1,58 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/riviu-buku/user_provider.dart';
+import 'package:http/http.dart' as http;
+import 'package:riviu_buku/models/user.dart';
+import 'package:profile/screens/profilepage.dart';
+import 'dart:convert';
 
-class UpdateProfileForm extends StatefulWidget {
-  final UserProvider userProvider;
+class EditProfileFormPage extends StatefulWidget {
+  // You can pass any necessary parameters here
+  final User user;
 
-  UpdateProfileForm({required this.userProvider});
+  EditProfileFormPage({required this.user});
 
   @override
-  _UpdateProfileFormState createState() => _UpdateProfileFormState();
+  _EditProfileFormPageState createState() => _EditProfileFormPageState();
 }
 
-class _UpdateProfileFormState extends State<UpdateProfileForm> {
-  @override
-  Widget build(BuildContext context) {
-    return Form(
-      key: widget.userProvider.formKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          TextFormField(
-            decoration: InputDecoration(labelText: 'Name'),
-            onSaved: (value) => widget.userProvider.name = value!,
-          ),
-          TextFormField(
-            decoration: InputDecoration(labelText: 'Avatar'),
-            onSaved: (value) => widget.userProvider.avatar = value!,
-          ),
-          TextFormField(
-            decoration: InputDecoration(labelText: 'Email'),
-            onSaved: (value) => widget.userProvider.email = value!,
-          ),
-          TextFormField(
-            decoration: InputDecoration(labelText: 'Handphone'),
-            onSaved: (value) => widget.userProvider.handphone = value!,
-          ),
-          TextFormField(
-            decoration: InputDecoration(labelText: 'Bio'),
-            onSaved: (value) => widget.userProvider.bio = value!,
-          ),
-          TextFormField(
-            decoration: InputDecoration(labelText: 'Address'),
-            onSaved: (value) => widget.userProvider.address = value!,
-          ),
-          ElevatedButton(
-            onPressed: () {
-              if (widget.userProvider.formKey.currentState?.validate() ?? false) {
-                widget.userProvider.formKey.currentState?.save();
-                widget.userProvider.updateDetails();
-              }
-            },
-            child: Text('Submit'),
-          ),
-        ],
-      ),
-    );
-  }
-}
+class _EditProfileFormPageState extends State<EditProfileFormPage> {}
