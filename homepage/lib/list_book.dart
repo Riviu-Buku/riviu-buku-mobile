@@ -1,3 +1,5 @@
+// ignore_for_file: depend_on_referenced_packages, library_private_types_in_public_api, avoid_print, non_constant_identifier_names
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -5,9 +7,12 @@ import 'package:riviu_buku/models/book.dart';
 import 'package:review/reviewpage.dart';
 import 'package:riviu_buku/left_drawer.dart';
 
+import 'package:riviu_buku/models/user.dart';
+import 'package:riviu_buku/provider/user_provider.dart';
 
 class Homepage extends StatefulWidget {
-    const Homepage({Key? key}) : super(key: key);
+    final User user;
+    const Homepage({Key? key, required this.user}) : super(key: key);
 
     @override
     _ProductPageState createState() => _ProductPageState();
@@ -19,7 +24,7 @@ Future<List<Book>> fetchBook() async {
     var url = Uri.parse(
         'http://127.0.0.1:8000/json/'
         // TODO: 
-        // 'https://https://riviu-buku-d07-tk.pbp.cs.ui.ac.id/json/'
+        // 'https://riviu-buku-d07-tk.pbp.cs.ui.ac.id/json/'
         );
     var response = await http.get(
         url,
@@ -27,29 +32,47 @@ Future<List<Book>> fetchBook() async {
     );
 
     // melakukan decode response menjadi bentuk json
+    // print("fetch gitu 3");
     var data = jsonDecode(utf8.decode(response.bodyBytes));
+    // print("fetch gitu 2");
 
     // melakukan konversi data json menjadi object Product
     List<Book> list_book = [];
     //TODO: Comment line dibawah (hanya nampilin 1 buku)
-    list_book.add(Book.fromJson(data[0]));
+    // print("fetch gitu 1");
+    // print(data[0]);
+    // list_book.add(Book.fromJson(data[0]));
+    // list_book.add(Book.fromJson(data[1]));
+    // list_book.add(Book.fromJson(data[2]));
+    // list_book.add(Book.fromJson(data[3]));
+    // print(data[97]);
+    // list_book.add(Book.fromJson(data[97]));
 
+    /// The line `print("fetch gitu");` is used to print the message "fetch gitu" to the console. It is
+    /// used as a debugging statement to check if the code execution reaches that point.
+    // print("fetch gitu");
     //TODO: Uncomment line dibawah buat nampilin semua data buku (berat 100>)
-    // for (var d in data) {
-    //     if (d != null) {
-    //         list_book.add(Book.fromJson(d));
-    //     }
-    // }
+    // var i = 100;
+    for (var d in data) {
+        if (d != null) {
+            list_book.add(Book.fromJson(d));
+        }
+        // i--;
+        // if(i == 0){
+        //   break;
+        // }
+    }
     return list_book;
 }
 
 @override
 Widget build(BuildContext context) {
+  User user = widget.user;
     return Scaffold(
         appBar: AppBar(
         title: const Text('Book'),
         ),
-        drawer: LeftDrawer(),
+        drawer: LeftDrawer(user: user),
         body: FutureBuilder(
             future: fetchBook(),
             builder: (context, AsyncSnapshot snapshot) {
@@ -69,17 +92,19 @@ Widget build(BuildContext context) {
                     );
                 } else {
                     return ListView.builder(
-                        // itemCount: snapshot.data!.length,
-                        itemCount: 1,
+                        itemCount: snapshot.data!.length,
+                        // itemCount: 5,
                         itemBuilder: (_, index) => GestureDetector(
                                 onTap: () {
                                   // Navigate to the detail item page
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => ReviewPage(
-                                        book: snapshot.data![index],
-                                      ),
+                                      builder: (context){
+                                        return ReviewPage(
+                                          book: snapshot.data![index], user: user,
+                                        );
+                                      }
                                     ),
                                   );
                                 },
@@ -92,6 +117,12 @@ Widget build(BuildContext context) {
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
+                                      SizedBox(height: 20),
+                                      Image.network(
+                                        snapshot.data![index].fields?.coverImg ?? "",
+                                        height: 200,
+                                        width: 150,
+                                      ),
                                       Text(
                                       "${snapshot.data![index].fields.title}",
                                       style: const TextStyle(
@@ -99,16 +130,16 @@ Widget build(BuildContext context) {
                                           fontWeight: FontWeight.bold,
                                       ),
                                       ),
-                                      const SizedBox(height: 10),
-                                      Text("${snapshot.data![index].fields.author}"),
-                                      const SizedBox(height: 10),
-                                      Text(
-                                          "${snapshot.data![index].fields.description}")
+                                      // const SizedBox(height: 10),
+                                      // Text("${snapshot.data![index].fields.author}"),
+                                      // const SizedBox(height: 10),
+                                      // Text(
+                                      // "${snapshot.data![index].fields.description}")
                                 ],
                                 ),
                             )));
                     }
-                }
+              }
             }));
     }
 }
