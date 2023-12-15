@@ -11,8 +11,9 @@ import 'package:review/review_form.dart';
 import 'package:provider/provider.dart';
 import 'package:riviu_buku/models/user.dart';
 import 'package:riviu_buku/provider/user_provider.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
-class ReviewPage extends ConsumerStatefulWidget {
+class ReviewPage extends StatefulWidget {
   final Book book;
   final User user;
    ReviewPage({required this.book, required this.user});
@@ -21,7 +22,8 @@ class ReviewPage extends ConsumerStatefulWidget {
   _ReviewPageState createState () => _ReviewPageState();
 }
 
-class _ReviewPageState extends ConsumerState<ReviewPage> {
+class _ReviewPageState extends State<ReviewPage> {
+  late bool isLiked;
 Future<List<Review>> fetchReview() async {
     // TODO: Ganti URL dan jangan lupa tambahkan trailing slash (/) di akhir URL!
 
@@ -47,6 +49,66 @@ Future<List<Review>> fetchReview() async {
     }
     return list_review;
 }
+
+Future<bool> fetchLikeStatus() async {
+    isLiked = false;
+    final response = await http.post(
+      Uri.parse('http://127.0.0.1:8000/book-detail/get-liked-user-flutter/'),
+      body: jsonEncode(<String, String>{
+        'bookId': widget.book.pk.toString(),
+        'user': widget.user.username,
+      }),
+    );
+
+    final responseData = jsonDecode(response.body);
+    if (responseData['status'] == 'success') {
+      setState(() {
+        isLiked = responseData['like'];
+      });
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("If you like the book, click the like button <3."),
+        ),
+      );
+    }
+
+    return isLiked;
+  }
+
+  Future<void> updateLikeStatus(bool likeStatus) async {
+    // ... your code to update like status on the server ...
+    if(likeStatus){
+      final response = await http.post(
+        Uri.parse('http://127.0.0.1:8000/book-detail/add-like-flutter/'),
+        body: jsonEncode(<String, String>{
+          'bookId': widget.book.pk.toString(),
+          'user': widget.user.username,
+        }),
+      );
+    }
+    else{
+      final response = await http.post(
+        Uri.parse('http://127.0.0.1:8000/book-detail/add-unlike-flutter/'),
+        body: jsonEncode(<String, String>{
+          'bookId': widget.book.pk.toString(),
+          'user': widget.user.username,
+        }),
+      );
+    }
+    
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchLikeStatus().then((value) {
+      setState(() {
+        isLiked = value;
+      });
+    });
+    // print(isLiked);
+  }
 
     @override
   Widget build(BuildContext context) {
@@ -94,22 +156,68 @@ Future<List<Review>> fetchReview() async {
               SizedBox(height: 10),
               Text(widget.book.fields?.author ?? ""),
               SizedBox(height: 10),
-              Text("Rating: ${widget.book.fields?.rating}"),
+              Row(
+                children: [
+                  Text(
+                    "Rating: ${widget.book.fields?.rating}",
+                    style: TextStyle(
+                      fontSize: 16.0,
+                    ),
+                  ),
+                  SizedBox(width: 8), // Adjust the spacing between text and stars
+
+                  RatingBar.builder(
+                    initialRating: widget.book.fields?.rating ?? 0.0,
+                    minRating: 1,
+                    direction: Axis.horizontal,
+                    allowHalfRating: true,
+                    itemCount: 5,
+                    itemSize: 20.0, // Adjust the size of the stars
+                    itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+                    itemBuilder: (context, _) => Icon(
+                      Icons.star,
+                      color: Colors.amber,
+                    ),
+                    onRatingUpdate: (rating) {
+                      // Handle the rating update if needed
+                    },
+                  ),
+                ],
+              ),
               SizedBox(height: 10),
               Text(widget.book.fields?.description ?? ""),
               SizedBox(height: 10),
-              
-              // buat button add review disini
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ReviewFormPage(user: user, book: widget.book),
-                    ),
-                  );
-                },
-                child: Text("Add Review"),
+
+              //create a like unlike button here using fetchLikeStatus
+              Row(
+                children: [
+                  ElevatedButton(
+                    onPressed: () async {
+                      // Toggle like status
+                      setState(() {
+                        isLiked = !isLiked;
+                      });
+
+                      // Update like status on the server
+                      await updateLikeStatus(isLiked);
+                    },
+                    child: Text(isLiked ? "Unlike" : "Like"),
+                  ),
+                  
+                  SizedBox(width: 8), // Adjust the spacing between buttons
+
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ReviewFormPage(user: user, book: widget.book),
+                        ),
+                      );
+                    },
+                    child: Text("Add Review"),
+                  ),
+                ],
               ),
               FutureBuilder(
                 future: fetchReview(),
@@ -151,6 +259,34 @@ Future<List<Review>> fetchReview() async {
                               ),
                               const SizedBox(height: 10),
                               Text("${snapshot.data[index].fields?.stars}"),
+                              Row(
+                                children: [
+                                  Text(
+                                    "Rating: ${snapshot.data[index].fields?.stars}",
+                                    style: TextStyle(
+                                      fontSize: 14.0,
+                                    ),
+                                  ),
+                                  SizedBox(width: 8), // Adjust the spacing between text and stars
+
+                                  RatingBar.builder(
+                                    initialRating: snapshot.data[index].fields?.stars ?? 0.0,
+                                    minRating: 1,
+                                    direction: Axis.horizontal,
+                                    allowHalfRating: true,
+                                    itemCount: 5,
+                                    itemSize: 20.0, // Adjust the size of the stars
+                                    itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+                                    itemBuilder: (context, _) => Icon(
+                                      Icons.star,
+                                      color: Colors.amber,
+                                    ),
+                                    onRatingUpdate: (rating) {
+                                      // Handle the rating update if needed
+                                    },
+                                  ),
+                                ],
+                              ),
                               const SizedBox(height: 10),
                               Text("${snapshot.data[index].fields?.description ?? ""}"),
                             ],

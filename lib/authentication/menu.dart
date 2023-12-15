@@ -30,7 +30,7 @@ class MyHomePage extends StatelessWidget {
       case "Profile":
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => ProfilePage()),
+          MaterialPageRoute(builder: (context) => ProfilePage(user: user)),
         );
         break;
       // Add more cases for other items if needed

@@ -1,15 +1,54 @@
 import 'package:flutter/material.dart';
+import 'package:riviu_buku/models/user.dart';
+import 'package:riviu_buku/models/book.dart';
+import 'package:review/reviewpage.dart';
+import 'package:profile/screens/create_profile_form.dart';
+// import 'package:profile/screens/update_profile_form.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class ProfilePage extends StatefulWidget {
+  final User user;
+  ProfilePage({required this.user});
+
   @override
-  _ProfileScreenState createState() => _ProfileScreenState();
+  _ProfilePageState createState() => _ProfilePageState();
 }
 
-class _ProfileScreenState extends State<ProfilePage> {
-  TextEditingController usernameController = TextEditingController();
-  TextEditingController handphoneController = TextEditingController();
-  TextEditingController bioController = TextEditingController();
-  TextEditingController addressController = TextEditingController();
+class _ProfilePageState extends State<ProfilePage> {
+  late Future<List<Book>> _likedBooks;
+
+  @override
+  void initState() {
+    super.initState();
+    _likedBooks = fetchLikedBooks();
+  }
+
+  Future<List<Book>> fetchLikedBooks() async {
+    final response = await http.post(
+      Uri.parse(
+          'http://127.0.0.1:8000/profile/get-books-liked-by-user-flutter/'),
+      body: jsonEncode(<String, String>{
+        'user': widget.user.username,
+      }),
+      headers: {"Content-Type": "application/json"},
+    );
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> responseData = json.decode(response.body);
+
+      if (responseData.containsKey("liked_books")) {
+        String likedBooksJson = responseData["liked_books"];
+        List<dynamic> data = json.decode(likedBooksJson);
+        List<Book> books = data.map((json) => Book.fromJson(json)).toList();
+        return books;
+      } else {
+        throw Exception('Missing "liked_books" key in response');
+      }
+    } else {
+      throw Exception('Failed to load liked books');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,106 +58,178 @@ class _ProfileScreenState extends State<ProfilePage> {
         title: Text(
           'Riviu Buku',
           style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
         backgroundColor: Color.fromRGBO(147, 129, 255, 1.000),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // Profile section
-            Container(
-              padding: EdgeInsets.all(8.0),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8.0),
+            SizedBox(height: 8),
+            Text('Profile'),
+            SizedBox(height: 8.0),
+            if (widget.user.avatar.isNotEmpty)... {
+              Container(
+                width: 100.0,
+                height: 100.0,
+                child: ClipOval(
+                  child: Image.asset(
+                    'assets/images/${widget.user.avatar}',
+                    fit: BoxFit.cover,
+                  ),
+                ),
               ),
-              child: Column(
-                children: [
-                  Text(
-                    'Profile',
-                    style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
+            } else ... {
+              Container(
+                width: 100.0,
+                height: 100.0,
+                child: ClipOval(
+                  child: Image.asset(
+                    'assets/images/avatar-default.jpeg',
+                    fit: BoxFit.cover,
                   ),
-                  SizedBox(height: 16.0),
-
-                  // Username
-                  TextFormField(
-                    controller: usernameController,
-                    style: TextStyle(fontSize: 16.0),
-                    decoration: InputDecoration(
-                      labelText: 'Username:',
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                  SizedBox(height: 8.0),
-
-                  // Handphone
-                  TextFormField(
-                    controller: handphoneController,
-                    style: TextStyle(fontSize: 16.0),
-                    decoration: InputDecoration(
-                      labelText: 'Handphone:',
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                  SizedBox(height: 8.0),
-
-                  // Bio
-                  TextFormField(
-                    controller: bioController,
-                    style: TextStyle(fontSize: 16.0),
-                    decoration: InputDecoration(
-                      labelText: 'Bio:',
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                  SizedBox(height: 8.0),
-
-                  // Address
-                  TextFormField(
-                    controller: addressController,
-                    style: TextStyle(fontSize: 16.0),
-                    decoration: InputDecoration(
-                      labelText: 'Address:',
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                ],
+                ),
               ),
+            },
+            SizedBox(height: 12.0),
+            if (widget.user.name.isNotEmpty)
+              Text(
+                '${widget.user.name}',
+                style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
             ),
-
-            // Liked Books section
-            Container(
-              padding: EdgeInsets.all(8.0),
-              margin: EdgeInsets.symmetric(vertical: 16.0),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8.0),
+            Text(
+              '@${widget.user.username}',
+              style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+            ),
+            if (widget.user.bio.isNotEmpty)
+              Text(
+                '"${widget.user.bio}"',
+                style: TextStyle(
+                  fontStyle: FontStyle.italic,
+                ),
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+            if (widget.user.email.isNotEmpty)
+              Center(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      'assets/images/icon-email.png',
+                      width: 15.0,
+                      height: 15.0,
+                    ),
+                    SizedBox(width: 8.0),
+                    Text('${widget.user.email}'),
+                  ],
+                ),
+              ),
+            if (widget.user.handphone.isNotEmpty)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
-                    '❤️ Liked Books ❤️',
-                    style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                  Image.asset(
+                    'assets/images/icon-handphone.png',
+                    width: 15.0,
+                    height: 15.0,
                   ),
-                  SizedBox(height: 16.0),
-                  // Add your liked books widgets here
+                  SizedBox(width: 8.0),
+                  Text('${widget.user.handphone}'),
                 ],
               ),
+            if (widget.user.address.isNotEmpty)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    'assets/images/icon-address.png',
+                    width: 15.0,
+                    height: 15.0,
+                  ),
+                  SizedBox(width: 8.0),
+                  Text('${widget.user.address}'),
+                ],
+              ),
+            SizedBox(height: 16),
+            if (widget.user.email.isEmpty ||
+                widget.user.handphone.isEmpty ||
+                widget.user.address.isEmpty) ... {
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => CompleteProfileFormPage(user: widget.user),
+                    ),
+                  );
+                },
+                child: Text("Complete Profile"),
+              ),
+            },
+            // } else ... {
+            //   ElevatedButton(
+            //     onPressed: () {
+            //       Navigator.push(
+            //         context,
+            //         MaterialPageRoute(
+            //           builder: (context) => EditProfileFormPage(user: widget.user),
+            //         ),
+            //       );
+            //     },
+            //     child: Text("Edit Profile"),
+            //   ),
+            // },
+            SizedBox(height: 16),
+            Text('Liked Books'),
+            FutureBuilder(
+              future: _likedBooks,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else {
+                  List<Book> likedBooks = snapshot.data as List<Book>;
+                  return Expanded(
+                    child: ListView.builder(
+                      itemCount: likedBooks.length,
+                      itemBuilder: (context, index) {
+                        return Card(
+                          child: ListTile(
+                            leading: Image.network(
+                              likedBooks[index].fields?.coverImg ?? '',
+                              height: 80,
+                              width: 60,
+                              fit: BoxFit.cover,
+                            ),
+                            title: Text(likedBooks[index].fields?.title ?? ""),
+                            subtitle:
+                                Text(likedBooks[index].fields?.author ?? ""),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ReviewPage(
+                                      user: widget.user,
+                                      book: likedBooks[index]),
+                                ),
+                              );
+                            },
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                }
+              },
             ),
           ],
         ),
       ),
     );
   }
-}
-
-void main() {
-  runApp(MaterialApp(
-    home: ProfilePage(),
-  ));
 }
