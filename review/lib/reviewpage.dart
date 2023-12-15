@@ -7,6 +7,8 @@ import 'package:review/models/review.dart';
 import 'package:homepage/list_book.dart';
 import 'package:riviu_buku/left_drawer.dart';
 import 'package:review/review_form.dart';
+import 'package:profile/screens/other_profilepage.dart';
+import 'package:profile/screens/profilepage.dart';
 
 import 'package:provider/provider.dart';
 import 'package:riviu_buku/models/user.dart';
@@ -16,25 +18,25 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 class ReviewPage extends StatefulWidget {
   final Book book;
   final User user;
-   ReviewPage({required this.book, required this.user});
+  ReviewPage({required this.book, required this.user});
 
   @override
-  _ReviewPageState createState () => _ReviewPageState();
+  _ReviewPageState createState() => _ReviewPageState();
 }
 
 class _ReviewPageState extends State<ReviewPage> {
   late bool isLiked;
-Future<List<Review>> fetchReview() async {
+  Future<List<Review>> fetchReview() async {
     // TODO: Ganti URL dan jangan lupa tambahkan trailing slash (/) di akhir URL!
 
     var url = Uri.parse(
         'http://127.0.0.1:8000/book-detail/get-review/${widget.book.pk}'
-        // TODO: 
+        // TODO:
         // 'https://riviu-buku-d07-tk.pbp.cs.ui.ac.id/json/'
         );
     var response = await http.get(
-        url,
-        headers: {"Content-Type": "application/json"},
+      url,
+      headers: {"Content-Type": "application/json"},
     );
 
     // melakukan decode response menjadi bentuk json
@@ -43,14 +45,14 @@ Future<List<Review>> fetchReview() async {
     // melakukan konversi data json menjadi object Product
     List<Review> list_review = [];
     for (var d in data) {
-        if (d != null) {
-            list_review.add(Review.fromJson(d));
-        }
+      if (d != null) {
+        list_review.add(Review.fromJson(d));
+      }
     }
     return list_review;
-}
+  }
 
-Future<bool> fetchLikeStatus() async {
+  Future<bool> fetchLikeStatus() async {
     isLiked = false;
     final response = await http.post(
       Uri.parse('http://127.0.0.1:8000/book-detail/get-liked-user-flutter/'),
@@ -78,7 +80,7 @@ Future<bool> fetchLikeStatus() async {
 
   Future<void> updateLikeStatus(bool likeStatus) async {
     // ... your code to update like status on the server ...
-    if(likeStatus){
+    if (likeStatus) {
       final response = await http.post(
         Uri.parse('http://127.0.0.1:8000/book-detail/add-like-flutter/'),
         body: jsonEncode(<String, String>{
@@ -86,8 +88,7 @@ Future<bool> fetchLikeStatus() async {
           'user': widget.user.username,
         }),
       );
-    }
-    else{
+    } else {
       final response = await http.post(
         Uri.parse('http://127.0.0.1:8000/book-detail/add-unlike-flutter/'),
         body: jsonEncode(<String, String>{
@@ -96,7 +97,6 @@ Future<bool> fetchLikeStatus() async {
         }),
       );
     }
-    
   }
 
   @override
@@ -110,7 +110,7 @@ Future<bool> fetchLikeStatus() async {
     // print(isLiked);
   }
 
-    @override
+  @override
   Widget build(BuildContext context) {
     User user = widget.user;
     return Scaffold(
@@ -164,7 +164,8 @@ Future<bool> fetchLikeStatus() async {
                       fontSize: 16.0,
                     ),
                   ),
-                  SizedBox(width: 8), // Adjust the spacing between text and stars
+                  SizedBox(
+                      width: 8), // Adjust the spacing between text and stars
 
                   RatingBar.builder(
                     initialRating: widget.book.fields?.rating ?? 0.0,
@@ -203,7 +204,7 @@ Future<bool> fetchLikeStatus() async {
                     },
                     child: Text(isLiked ? "Unlike" : "Like"),
                   ),
-                  
+
                   SizedBox(width: 8), // Adjust the spacing between buttons
 
                   ElevatedButton(
@@ -211,7 +212,8 @@ Future<bool> fetchLikeStatus() async {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => ReviewFormPage(user: user, book: widget.book),
+                          builder: (context) =>
+                              ReviewFormPage(user: user, book: widget.book),
                         ),
                       );
                     },
@@ -232,29 +234,56 @@ Future<bool> fetchLikeStatus() async {
                     return Center(
                       child: Text(
                         "Tidak ada data review.",
-                        style: TextStyle(color: Color(0xff59A5D8), fontSize: 20),
+                        style:
+                            TextStyle(color: Color(0xff59A5D8), fontSize: 20),
                       ),
                     );
                   } else {
                     return ListView.builder(
                       shrinkWrap: true, // Important to prevent rendering issues
-                      physics: NeverScrollableScrollPhysics(), // Disable scrolling
+                      physics:
+                          NeverScrollableScrollPhysics(), // Disable scrolling
                       itemCount: snapshot.data.length,
                       itemBuilder: (context, index) => GestureDetector(
                         onTap: () {},
                         child: Container(
                           margin: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 12),
+                              horizontal: 16, vertical: 12),
                           padding: const EdgeInsets.all(20.0),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                "${snapshot.data[index].fields?.name ?? ""}",
-                                style: const TextStyle(
-                                  fontSize: 18.0,
-                                  fontWeight: FontWeight.bold,
+                              GestureDetector(
+                                onTap: () {
+                                  if (widget.user.username ==
+                                      snapshot.data[index].fields?.name) {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            ProfilePage(user: widget.user),
+                                      ),
+                                    );
+                                  } else {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => OtherProfilePage(
+                                            user: snapshot
+                                                .data[index].fields?.name,
+                                            authUser: widget.user),
+                                      ),
+                                    );
+                                  }
+                                },
+                                child: Text(
+                                  "${snapshot.data[index].fields?.name ?? ""}",
+                                  style: const TextStyle(
+                                    fontSize: 18.0,
+                                    fontWeight: FontWeight.bold,
+                                    decoration: TextDecoration.underline,
+                                  ),
                                 ),
                               ),
                               const SizedBox(height: 10),
@@ -267,16 +296,22 @@ Future<bool> fetchLikeStatus() async {
                                       fontSize: 14.0,
                                     ),
                                   ),
-                                  SizedBox(width: 8), // Adjust the spacing between text and stars
+                                  SizedBox(
+                                      width:
+                                          8), // Adjust the spacing between text and stars
 
                                   RatingBar.builder(
-                                    initialRating: snapshot.data[index].fields?.stars ?? 0.0,
+                                    initialRating:
+                                        snapshot.data[index].fields?.stars ??
+                                            0.0,
                                     minRating: 1,
                                     direction: Axis.horizontal,
                                     allowHalfRating: true,
                                     itemCount: 5,
-                                    itemSize: 20.0, // Adjust the size of the stars
-                                    itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+                                    itemSize:
+                                        20.0, // Adjust the size of the stars
+                                    itemPadding:
+                                        EdgeInsets.symmetric(horizontal: 4.0),
                                     itemBuilder: (context, _) => Icon(
                                       Icons.star,
                                       color: Colors.amber,
@@ -288,7 +323,8 @@ Future<bool> fetchLikeStatus() async {
                                 ],
                               ),
                               const SizedBox(height: 10),
-                              Text("${snapshot.data[index].fields?.description ?? ""}"),
+                              Text(
+                                  "${snapshot.data[index].fields?.description ?? ""}"),
                             ],
                           ),
                         ),
