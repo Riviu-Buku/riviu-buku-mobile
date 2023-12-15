@@ -23,6 +23,12 @@ class _CompleteProfileFormPageState extends State<CompleteProfileFormPage> {
   String _email = '';
   String _handphone = '';
   String _address = '';
+  late Map<String, String> userMap;
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,22 +37,45 @@ class _CompleteProfileFormPageState extends State<CompleteProfileFormPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Center(
-          child: Text('Form Review'),
+          child: Text('Edit Profile'),
         ),
-        backgroundColor: Colors.indigo,
-        foregroundColor: Colors.white,
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black,
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.pop(
-                context); // Pop the navigator when the back button is pressed
+                context);
           },
         ),
       ),
       drawer: LeftDrawer(
         user: user,
       ),
-      body: Form(
+       body: Container(
+        decoration: BoxDecoration (
+            gradient: LinearGradient(
+              colors: [
+              Color.fromARGB(255, 191, 156, 239),
+              Color.fromARGB(255, 216, 191, 247),
+              Color.fromARGB(255, 255, 223, 182),
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+        ),
+        color: Color.fromRGBO(184, 184, 255, 1.0),
+        child: Center(
+          child: Card(
+            color: Colors.white.withOpacity(1), 
+            elevation: 5,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15.0),
+            ),
+            margin: EdgeInsets.all(16.0),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+      child: Form(
         key: _formKey,
         child: SingleChildScrollView(
           child: Column(
@@ -241,7 +270,6 @@ class _CompleteProfileFormPageState extends State<CompleteProfileFormPage> {
                   ),
                   onChanged: (String? value) {
                     setState(() {
-                      // NOTE: Tambahkan variabel yang sesuai
                       _email = value!;
                     });
                   },
@@ -307,12 +335,10 @@ class _CompleteProfileFormPageState extends State<CompleteProfileFormPage> {
                   padding: const EdgeInsets.all(8.0),
                   child: ElevatedButton(
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(Colors.indigo),
+                      backgroundColor: MaterialStateProperty.all(Color.fromRGBO(147,129,255,1.000)),
                     ),
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
-                        // Kirim ke Django dan tunggu respons
-                        // TODO: Ganti URL dan jangan lupa tambahkan trailing slash (/) di akhir URL!
                         final response = await http.post(
                             Uri.parse(
                                 'http://127.0.0.1:8000/profile/complete-profile-flutter/'),
@@ -335,7 +361,7 @@ class _CompleteProfileFormPageState extends State<CompleteProfileFormPage> {
                             context,
                             MaterialPageRoute(builder: (context) {
                               return ProfilePage(
-                                user: user,
+                                user: widget.user,
                               );
                             }),
                           );
@@ -352,13 +378,17 @@ class _CompleteProfileFormPageState extends State<CompleteProfileFormPage> {
                       "Save",
                       style: TextStyle(color: Colors.white),
                     ),
-                  ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ],
+            ),
           ),
         ),
       ),
+       )
     );
   }
 }
