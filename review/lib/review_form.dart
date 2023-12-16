@@ -145,14 +145,20 @@ class _ReviewFormPageState extends State<ReviewFormPage> {
                                     .showSnackBar(const SnackBar(
                                 content: Text("Produk baru berhasil disimpan!"),
                                 ));
+                                // Pop the current route from the stack
+                                Navigator.pop(context);
+
+                                // Push the new replacement route
                                 Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(builder: (context){
-                                        return ReviewPage(
-                                          book: widget.book, user: user,
-                                        );
-                                      }
-                                    ),
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) {
+                                      return ReviewPage(
+                                        book: widget.book,
+                                        user: user,
+                                      );
+                                    },
+                                  ),
                                 );
                             } else {
                                 ScaffoldMessenger.of(context)

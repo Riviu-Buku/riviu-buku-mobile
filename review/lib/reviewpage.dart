@@ -9,7 +9,7 @@ import 'package:riviu_buku/left_drawer.dart';
 import 'package:review/review_form.dart';
 import 'package:profile/screens/other_profilepage.dart';
 import 'package:profile/screens/profilepage.dart';
-
+import 'package:expandable_text/expandable_text.dart';
 import 'package:provider/provider.dart';
 import 'package:riviu_buku/models/user.dart';
 import 'package:riviu_buku/provider/user_provider.dart';
@@ -26,6 +26,7 @@ class ReviewPage extends StatefulWidget {
 
 class _ReviewPageState extends State<ReviewPage> {
   late bool isLiked;
+  bool isExpanded = false;
   Future<List<Review>> fetchReview() async {
     // TODO: Ganti URL dan jangan lupa tambahkan trailing slash (/) di akhir URL!
 
@@ -169,8 +170,8 @@ class _ReviewPageState extends State<ReviewPage> {
                 // Image on the left side
                 Image.network(
                   widget.book.fields?.coverImg ?? "",
-                  height: 300,
-                  width: 200,
+                  height: 150,
+                  width: 100,
                 ),
                 SizedBox(width: 20), // Adjust the spacing between image and text
 
@@ -193,50 +194,45 @@ class _ReviewPageState extends State<ReviewPage> {
                               
                             ),),
                       SizedBox(height: 10),
-                      Row(
-                        children: [
-                          Text(
-                            "${widget.book.fields?.rating} out of 5.0",
-                            style: TextStyle(
-                              fontSize: 16.0,
-                            ),
-                          ),
-                          SizedBox(width: 8), // Adjust the spacing between text and stars
-
-                          RatingBar.builder(
-                            initialRating: widget.book.fields?.rating ?? 0.0,
-                            minRating: 1,
-                            direction: Axis.horizontal,
-                            allowHalfRating: true,
-                            itemCount: 5,
-                            itemSize: 20.0, // Adjust the size of the stars
-                            itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-                            itemBuilder: (context, _) => Icon(
-                              Icons.star,
-                              color: Colors.amber,
-                            ),
-                            onRatingUpdate: (rating) {
-                              // Handle the rating update if needed
-                            },
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 10),
-                      Container(
-                        child: Text(
-                          widget.book.fields?.description ?? "",
-                          softWrap: true,
-                          overflow: TextOverflow.visible,
+                      Text(
+                        "${widget.book.fields?.rating} out of 5.0",
+                        style: TextStyle(
+                          fontSize: 16.0,
                         ),
                       ),
-                      SizedBox(height: 10),
+                      SizedBox(height: 10), // Adjust the spacing between text and stars
+                      RatingBar.builder(
+                        initialRating: widget.book.fields?.rating ?? 0.0,
+                        minRating: 1,
+                        direction: Axis.horizontal,
+                        allowHalfRating: true,
+                        itemCount: 5,
+                        itemSize: 20.0, // Adjust the size of the stars
+                        itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+                        itemBuilder: (context, _) => Icon(
+                          Icons.star,
+                          color: Colors.amber,
+                        ),
+                        onRatingUpdate: (rating) {
+                          // Handle the rating update if needed
+                        },
+                      ),
                     ],
                   ),
                 ),
               ],
             ),
         // Add other widgets as needed, e.g., like/unlike button
-
+              SizedBox(height: 10),
+              Container(
+                child: ExpandableText(
+                      widget.book.fields?.description ?? "",
+                      expandText: 'show more',
+                      collapseText: 'show less',
+                      maxLines: 3,
+                      linkColor: Colors.blue,
+                  )
+              ),
               //create a like unlike button here using fetchLikeStatus
               SizedBox(height: 10),
               Row(
@@ -260,7 +256,7 @@ class _ReviewPageState extends State<ReviewPage> {
                     child: Text(isLiked ? "Unlike" : "Like"),
                   ),
 
-                  SizedBox(width: 8), // Adjust the spacing between buttons
+                  SizedBox(width: 10), // Adjust the spacing between buttons
 
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
@@ -279,6 +275,7 @@ class _ReviewPageState extends State<ReviewPage> {
                     },
                     child: Text("Add Review"),
                   ),
+                  SizedBox(height: 10),
                 ],
               ),
               FutureBuilder(
@@ -292,10 +289,13 @@ class _ReviewPageState extends State<ReviewPage> {
                     );
                   } else if (!snapshot.hasData || snapshot.data.isEmpty) {
                     return Center(
-                      child: Text(
-                        "Tidak ada data review.",
-                        style:
-                            TextStyle(color: Color(0xff59A5D8), fontSize: 20),
+                      child: Padding(
+                        padding: EdgeInsets.all(20.0), // Add 20 pixels of padding on all sides
+                        child: Text(
+                          "Tidak ada data review. Jadilah yang pertama untuk mereview buku ini!",
+                          style: TextStyle(color: Colors.black, fontSize: 12),
+                          textAlign: TextAlign.center,
+                        ),
                       ),
                     );
                   } else {
@@ -306,7 +306,7 @@ class _ReviewPageState extends State<ReviewPage> {
                         itemBuilder: (context, index) => GestureDetector(
                           onTap: () {},
                           child: Container(
-                            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                            margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 12),
                             decoration: BoxDecoration(
                               color: Color.fromRGBO(255, 238, 221, 1), // Background color
                               borderRadius: BorderRadius.circular(12), // Rounded corners
@@ -389,7 +389,7 @@ class _ReviewPageState extends State<ReviewPage> {
                                 ),
                                 if (snapshot.data[index].fields?.name == widget.user.username)
                                   Positioned(
-                                    top: 10,
+                                    top: 20,
                                     right: 10,
                                     child: MouseRegion(
                                       cursor: SystemMouseCursors.click,
