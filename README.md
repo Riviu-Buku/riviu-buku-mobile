@@ -59,7 +59,7 @@ Seperti namanya, Riviu Buku adalah aplikasi untuk mereview buku. Riviu Buku coco
 
 Apa yang membedakan Riviu Buku dengan aplikasi lainnya?🤔Riviu Buku fokus pada interaksi dan kolaborasi antar pembaca. Pengguna dapat membuat ulasan buku serta menulis catatan atau komentar pribadi mengenai suatu buku. Ulasan tersebut dapat membantu pengguna lain dalam memilih buku yang sesuai dengan minat mereka sehingga diharapkan dapat menciptakan komunitas pembaca buku yang lebih aktif🤩. 
 
-Salah satu fitur menarik dari Riviu Buku adalah fitur untuk melihat rekomendasi buku dari pengguna lain sehingga kamu dapat bertemu dengan orang-orang yang minat bacanya serupa denganmu. Selain itu, kamu dapat membuat daftar bacaan pribadi, menandai buku sebagai "ingin dibaca", "sedang dibaca", atau "sudah selesai" sehingga fitur ini dapat membantu melacak perkembangan literasimu👌.
+Dalam Riviu Buku, pengguna dapat menyimpan buku ke daftar favorit dan juga melihat daftar buku favorit orang lain sehingga memudahkanmu bertemu pengguna lain yang minat bacanya mirip denganmu👌.
 
 Terima kasih telah membaca cerita Riviu Buku, selamat membaca dan mereview!😇📖⭐️
 
@@ -71,7 +71,7 @@ Terima kasih telah membaca cerita Riviu Buku, selamat membaca dan mereview!😇�
 - 📕 Modul untuk me-review buku yang oleh pengguna yang disertai oleh leaderboard berdasarkan review terbaik menggunakan fitur upvote dan downvote; dikerjakan oleh Samuel Taniel Mulyadi;</p> 
 - 📕 Modul koleksi, kategori, dan favorit yang memungkinkan pengguna untuk menyimpan daftar buku favorit dan fungsi untuk menambahkan buku ke album/wishlist pengguna serta upload buku untuk bisa di review; dikerjakan oleh Ken Balya</p>
 - 📕 Modul homepage yang menyajikan rekomendasi berdasarkan jumlah likes pada suatu kategori buku oleh pengguna; dikerjakan oleh Khansa Mahira</p>
-- 📕 Modul wishlist pada profil pengguna yang berisi katalog ulasan yang telah ditulis oleh pengguna, dan kategori buku favorit; dikerjakan oleh Syazantri Salsabila</p>
+- 📕 Modul profile yang bisa melihat koleksi buku favorit dan mengedit detail profile; dikerjakan oleh Syazantri Salsabila</p>
 - 📕 Modul Album Buku dimana pengguna bisa mengumpulkan berbagai buku ke dalam suatu folder contohnya buku a,b, dan c yang mencakup kurikulum IPS, serta dengan implementasinya di dalam kotak pencarian homepage; dikerjakan oleh Emmanuel Patrick.</p>
 
 <p></p>

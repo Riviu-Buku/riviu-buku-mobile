@@ -126,7 +126,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                 String username = _usernameController.text;
                                 String password = _passwordController.text;
                                 final user = await loginBangIsa(username, password);
-                                print('oi');
                                 if(user != null){
                                   Navigator.pushReplacement(
                                         context,

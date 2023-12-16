@@ -4,6 +4,9 @@ import 'package:riviu_buku/left_drawer.dart';
 import 'package:riviu_buku/authentication/menu.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
+import 'package:riviu_buku/models/book.dart';
+import 'package:review/reviewpage.dart';
+import 'package:http/http.dart' as http;
 
 import 'package:riviu_buku/models/user.dart';
 import 'package:riviu_buku/provider/user_provider.dart';
@@ -12,7 +15,8 @@ import 'dart:convert';
 
 class ReviewFormPage extends StatefulWidget {
     final User user;
-    const ReviewFormPage({super.key, required this.user});
+    final Book book;
+    const ReviewFormPage({super.key, required this.user, required this.book});
 
     @override
     State<ReviewFormPage> createState() => _ReviewFormPageState();
@@ -22,26 +26,29 @@ class _ReviewFormPageState extends State<ReviewFormPage> {
     // ignore: no_leading_underscores_for_local_identifiers
     final _formKey = GlobalKey<FormState>();
     // ignore: no_leading_underscores_for_local_identifiers
-    String _name = "";
-    // ignore: no_leading_underscores_for_local_identifiers
     int _price = 0;
+    // ignore: no_leading_underscores_for_local_identifiers
+    int _stars = 1;
     // ignore: no_leading_underscores_for_local_identifiers
     String _description = "";
     
     @override
     Widget build(BuildContext context) {
         User user = widget.user;
-        final request = context.watch<CookieRequest>();
 
         return Scaffold(
           appBar: AppBar(
             title: const Center(
-              child: Text(
-                'Form Tambah Produk',
-              ),
+              child: Text('Form Review'),
             ),
             backgroundColor: Colors.indigo,
             foregroundColor: Colors.white,
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back),
+              onPressed: () {
+                Navigator.pop(context); // Pop the navigator when the back button is pressed
+              },
+            ),
           ),
           // NOTE: Tambahkan drawer yang sudah dibuat di sini
         drawer: LeftDrawer(user: user,),
@@ -52,56 +59,36 @@ class _ReviewFormPageState extends State<ReviewFormPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextFormField(
-                    decoration: InputDecoration(
-                      hintText: "Nama Produk",
-                      labelText: "Nama Produk",
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5.0),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: DropdownButtonFormField<int>(
+                      value: _stars,
+                      onChanged: (int? value) {
+                        setState(() {
+                          _stars = value!;
+                        });
+                      },
+                      items: List.generate(5, (index) {
+                        return DropdownMenuItem<int>(
+                          value: index + 1,
+                          child: Text('${index + 1} Star'),
+                        );
+                      }),
+                      decoration: InputDecoration(
+                        hintText: "Stars",
+                        labelText: "Stars",
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5.0),
+                        ),
                       ),
+                      validator: (int? value) {
+                        if (value == null) {
+                          return "Please select a star rating!";
+                        }
+                        return null;
+                      },
                     ),
-                    onChanged: (String? value) {
-                      setState(() {
-                        _name = value!;
-                      });
-                    },
-                    validator: (String? value) {
-                      if (value == null || value.isEmpty) {
-                        return "Nama tidak boleh kosong!";
-                      }
-                      return null;
-                    },
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextFormField(
-                    decoration: InputDecoration(
-                      hintText: "Harga",
-                      labelText: "Harga",
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5.0),
-                      ),
-                    ),
-                    // NOTE: Tambahkan variabel yang sesuai
-                    onChanged: (String? value) {
-                      setState(() {
-                        _price = int.parse(value!);
-                      });
-                    },
-                    validator: (String? value) {
-                      if (value == null || value.isEmpty) {
-                        return "Harga tidak boleh kosong!";
-                      }
-                      if (int.tryParse(value) == null) {
-                        return "Harga harus berupa angka!";
-                      }
-                      return null;
-                    },
-                  ),
-                ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
@@ -139,22 +126,29 @@ class _ReviewFormPageState extends State<ReviewFormPage> {
                         if (_formKey.currentState!.validate()) {
                             // Kirim ke Django dan tunggu respons
                             // TODO: Ganti URL dan jangan lupa tambahkan trailing slash (/) di akhir URL!
-                            final response = await request.postJson(
-                            "http://samuel-taniel-tutorial.pbp.cs.ui.ac.id/create-flutter/",
-                            jsonEncode(<String, String>{
-                                'name': _name,
-                                'price': _price.toString(),
+                            final response = await http.post(Uri.parse(
+                              'http://127.0.0.1:8000/book-detail/create-review-flutter/'
+                              )
+                            ,body: jsonEncode(<String, String>{
+                                'bookId': widget.book.pk.toString(),
+                                'user': widget.user.username,
+                                'stars': _stars.toString(),
                                 'description': _description,
-                                // TODO: Sesuaikan field data sesuai dengan aplikasimu
                             }));
-                            if (response['status'] == 'success') {
+                            final responseData = jsonDecode(response.body);
+                            if (responseData['status'] == 'success') {
                                 ScaffoldMessenger.of(context)
                                     .showSnackBar(const SnackBar(
                                 content: Text("Produk baru berhasil disimpan!"),
                                 ));
                                 Navigator.pushReplacement(
                                     context,
-                                    MaterialPageRoute(builder: (context) => MyHomePage(user)),
+                                    MaterialPageRoute(builder: (context){
+                                        return ReviewPage(
+                                          book: widget.book, user: user,
+                                        );
+                                      }
+                                    ),
                                 );
                             } else {
                                 ScaffoldMessenger.of(context)

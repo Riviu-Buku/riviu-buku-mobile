@@ -4,19 +4,20 @@ import 'package:riviu_buku/models/book.dart';
 import 'package:review/reviewpage.dart';
 import 'package:homepage/list_book.dart';
 import 'package:profile/screens/create_profile_form.dart';
-import 'package:profile/screens/update_profile_form.dart';
+// import 'package:profile/screens/update_profile_form.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-class ProfilePage extends StatefulWidget {
-  final User user;
-  ProfilePage({required this.user});
+class OtherProfilePage extends StatefulWidget {
+  final String user;
+  final User authUser;
+  OtherProfilePage({required this.user, required this.authUser});
 
   @override
-  _ProfilePageState createState() => _ProfilePageState();
+  _OtherProfilePageState createState() => _OtherProfilePageState();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
+class _OtherProfilePageState extends State<OtherProfilePage> {
   late Future<List<Book>> _likedBooks;
   late Future<Map<String, String>> _user;
   late Map<String, String> userMap;
@@ -32,7 +33,7 @@ class _ProfilePageState extends State<ProfilePage> {
     final response = await http.post(
       Uri.parse('http://127.0.0.1:8000/profile/get-profile-user/'),
       body: jsonEncode(<String, String>{
-        'user': widget.user.username,
+        'user': widget.user,
       }),
       headers: {"Content-Type": "application/json"},
     );
@@ -57,7 +58,7 @@ class _ProfilePageState extends State<ProfilePage> {
       Uri.parse(
           'http://127.0.0.1:8000/profile/get-books-liked-by-user-flutter/'),
       body: jsonEncode(<String, String>{
-        'user': widget.user.username,
+        'user': widget.user,
       }),
       headers: {"Content-Type": "application/json"},
     );
@@ -184,7 +185,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 fontSize: 25, fontWeight: FontWeight.bold),
                           ),
                         Text(
-                          '@${widget.user.username}',
+                          '@${widget.user}',
                           style: TextStyle(
                               fontSize: 12, fontWeight: FontWeight.w500),
                         ),
@@ -237,48 +238,6 @@ class _ProfilePageState extends State<ProfilePage> {
                             ],
                           ),
                         SizedBox(height: 16),
-                        if (profileUser["email"] == null)
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor:
-                                  Color.fromRGBO(255,216,190,1.000),
-                              foregroundColor: Colors.black,
-                            ),
-                            onPressed: () {
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => CompleteProfileFormPage(
-                                      user: widget.user),
-                                ),
-                              );
-                            },
-                            child: Text("Complete Profile"),
-                          )
-                        else
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor:
-                                  Color.fromRGBO(254, 231, 192, 1),
-                              foregroundColor: Colors.black,
-                            ),
-                            onPressed: () {
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => EditProfileFormPage(
-                                      user: widget.user, 
-                                      email: profileUser['email'].toString(), 
-                                      handphone: profileUser['handphone'].toString(),
-                                      bio: profileUser['bio'].toString(),
-                                      address: profileUser['address'].toString(),
-                                      name: profileUser['name'].toString(),
-                                      avatar: profileUser['avatar'].toString()),
-                                ),
-                              );
-                            },
-                            child: Text("Edit Profile"),
-                          ),
                       ],
                     );
                   }
@@ -286,7 +245,7 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
               SizedBox(height: 25),
               Text(
-                'My Favorite Books',
+                'Favorite Books',
                 style: TextStyle(
                   color: Color.fromRGBO(90, 83, 131, 1),
                   fontSize: 16,
@@ -307,36 +266,15 @@ class _ProfilePageState extends State<ProfilePage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            "You don't have any liked books, let's explore more!",
+                            "This user didn't have any liked books",
                             style: TextStyle(fontSize: 16.0),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      Homepage(user: widget.user),
-                                ),
-                              );
-                            },
-                            child: Text(
-                              "More books",
-                              style: TextStyle(
-                                fontSize: 16.0,
-                                decoration: TextDecoration.underline,
-                                color: Colors.blue,
-                              ),
-                            ),
                           ),
                         ],
                       );
                     } else {
                       return Container(
-                        width: MediaQuery.of(context)
-                            .size
-                            .width, 
-                        height: 200, 
+                        width: MediaQuery.of(context).size.width,
+                        height: 200,
                         child: ListView.builder(
                           scrollDirection: Axis.horizontal,
                           itemCount: likedBooks.length,
@@ -347,7 +285,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => ReviewPage(
-                                      user: widget.user,
+                                      user: widget.authUser,
                                       book: likedBooks[index],
                                     ),
                                   ),
@@ -368,9 +306,9 @@ class _ProfilePageState extends State<ProfilePage> {
                                       ),
                                       gradient: LinearGradient(
                                         colors: [
-                                        Color.fromARGB(255, 255, 237, 220),
-                                        Color.fromARGB(255, 243, 241, 252),
-                                        Color.fromARGB(255, 229, 218, 255),
+                                          Color.fromARGB(255, 224, 200, 255),
+                                          Color.fromARGB(255, 255, 247, 226),
+                                          Color.fromARGB(255, 229, 218, 255),
                                         ],
                                         begin: Alignment.topLeft,
                                         end: Alignment.bottomRight,
