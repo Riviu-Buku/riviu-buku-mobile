@@ -57,10 +57,6 @@ Future<List<Book>> fetchBook() async {
         if (d != null) {
             list_book.add(Book.fromJson(d));
         }
-        // i--;
-        // if(i == 0){
-        //   break;
-        // }
     }
     return list_book;
 }
@@ -91,7 +87,12 @@ Widget build(BuildContext context) {
                         ],
                     );
                 } else {
-                    return ListView.builder(
+                    return GridView.builder(
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2, // Number of items in each row
+                          crossAxisSpacing: 16.0, // Spacing between items horizontally
+                          mainAxisSpacing: 16.0, // Spacing between items vertically
+                        ),
                         itemCount: snapshot.data!.length,
                         // itemCount: 5,
                         itemBuilder: (_, index) => GestureDetector(
@@ -108,33 +109,59 @@ Widget build(BuildContext context) {
                                     ),
                                   );
                                 },
-                        
-                                child: Container(
-                                  margin: const EdgeInsets.symmetric(
-                                      horizontal: 16, vertical: 12),
-                                  padding: const EdgeInsets.all(20.0),
+                              
+                                child: Card(
+                                  //margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                                  //padding: const EdgeInsets.all(20.0),
+                                  elevation: 5,
                                   child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                      SizedBox(height: 20),
-                                      Image.network(
-                                        snapshot.data![index].fields?.coverImg ?? "",
-                                        height: 200,
-                                        width: 150,
-                                      ),
-                                      Text(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  /*
+                                  SizedBox(height: 20),
+                                  Image.network(
+                                    snapshot.data![index].fields?.coverImg ?? "",
+                                    height: 200,
+                                    width: 150,
+                                  ),
+                                  Text(
+                                    "${snapshot.data![index].fields.title}",
+                                    style: const TextStyle(
+                                      fontSize: 18.0,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  */
+                                  Expanded(
+                                    child: Image.network(
+                                      snapshot.data![index].fields?.coverImg ?? "",
+                                      //fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                  /*
+                                  Container(
+                                    height: 100,
+                                    decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                        image: NetworkImage(
+                                          snapshot.data![index].fields?.coverImg ?? "",
+                                        ),
+                                        //fit: BoxFit.cover
+                                      )
+                                    ),
+                                  ),
+                                  */
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
                                       "${snapshot.data![index].fields.title}",
                                       style: const TextStyle(
-                                          fontSize: 18.0,
-                                          fontWeight: FontWeight.bold,
+                                        fontSize: 14.0,
+                                        fontWeight: FontWeight.bold,
                                       ),
-                                      ),
-                                      // const SizedBox(height: 10),
-                                      // Text("${snapshot.data![index].fields.author}"),
-                                      // const SizedBox(height: 10),
-                                      // Text(
-                                      // "${snapshot.data![index].fields.description}")
+                                    ),
+                                  ),
                                 ],
                                 ),
                             )));

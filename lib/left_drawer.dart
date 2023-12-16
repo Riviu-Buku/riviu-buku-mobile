@@ -9,6 +9,7 @@ import 'package:homepage/list_book.dart';
 import 'package:riviu_buku/models/book.dart';
 import 'package:riviu_buku/models/user.dart';
 import 'package:riviu_buku/provider/user_provider.dart';
+import 'package:mybooks/mybooks.dart';
 
 class LeftDrawer extends StatelessWidget {
   final User user;
@@ -80,6 +81,18 @@ class LeftDrawer extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.book),
             title: const Text('Daftar Buku'),
+            onTap: () {
+                // Route menu ke halaman produk
+                Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => Homepage(user: user)),
+                );
+              },
+          ),
+          ListTile(
+            leading: const Icon(Icons.person_pin_rounded),
+            title: const Text('Buku Saya'),
             onTap: () {
                 // Route menu ke halaman produk
                 Navigator.push(
