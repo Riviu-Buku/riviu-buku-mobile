@@ -87,7 +87,7 @@ dev_dependencies:
 # The following section is specific to Flutter packages.
 flutter:
   assets:
-     - assets/images/  assets:
+     - assets/images/
      - assets/images/avatar-default.jpeg
      - assets/images/avatar1.jpeg
      - assets/images/avatar2.jpeg
