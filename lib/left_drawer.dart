@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors_in_immutables
+
 import 'package:flutter/material.dart';
 import 'package:riviu_buku/authentication/menu.dart';
 // import 'package:shopping_list/screens/shoplist_form.dart';
@@ -5,9 +7,12 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:homepage/list_book.dart';
 import 'package:riviu_buku/models/book.dart';
+import 'package:riviu_buku/models/user.dart';
+import 'package:riviu_buku/provider/user_provider.dart';
 
 class LeftDrawer extends StatelessWidget {
-  LeftDrawer({super.key});
+  final User user;
+  LeftDrawer({super.key, required this.user});
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +57,7 @@ class LeftDrawer extends StatelessWidget {
               Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => MyHomePage(),
+                    builder: (context) => MyHomePage(user),
                   ));
             },
           ),
@@ -79,7 +84,8 @@ class LeftDrawer extends StatelessWidget {
                 // Route menu ke halaman produk
                 Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const Homepage()),
+                MaterialPageRoute(
+                  builder: (context) => Homepage(user: user)),
                 );
               },
           ),

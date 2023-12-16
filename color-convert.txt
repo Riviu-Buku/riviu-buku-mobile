@@ -1,0 +1,11 @@
+Ini color palette kita yang di django, tapi dalam bentuk RGBO gais
+
+ungu-muda: 184,184,255,1.000
+ungu-tua: 147,129,255,1.000
+cream-tua: 255,216,190,1.000
+cream-muda: 255,238,221,1.000
+putih: 248,247,255,1.000
+yellow: 250,202,21,1.000
+
+cara pakenya gini, misal pengen pake ungu tua buat background color jadi:
+backgroundColor: Color.fromRGBO(147,129,255,1.000),

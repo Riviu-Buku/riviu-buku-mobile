@@ -7,9 +7,12 @@ import 'package:riviu_buku/models/book.dart';
 import 'package:review/reviewpage.dart';
 import 'package:riviu_buku/left_drawer.dart';
 
+import 'package:riviu_buku/models/user.dart';
+import 'package:riviu_buku/provider/user_provider.dart';
 
 class Homepage extends StatefulWidget {
-    const Homepage({Key? key}) : super(key: key);
+    final User user;
+    const Homepage({Key? key, required this.user}) : super(key: key);
 
     @override
     _ProductPageState createState() => _ProductPageState();
@@ -29,37 +32,43 @@ Future<List<Book>> fetchBook() async {
     );
 
     // melakukan decode response menjadi bentuk json
-    print("fetch gitu 3");
+    // print("fetch gitu 3");
     var data = jsonDecode(utf8.decode(response.bodyBytes));
-    print("fetch gitu 2");
+    // print("fetch gitu 2");
 
     // melakukan konversi data json menjadi object Product
     List<Book> list_book = [];
     //TODO: Comment line dibawah (hanya nampilin 1 buku)
-    print("fetch gitu 1");
-    //print(data[0]);
-    list_book.add(Book.fromJson(data[103]));
-    //list_book.add(Book.fromJson(data[1]));
-    //list_book.add(Book.fromJson(data[2]));
-    //list_book.add(Book.fromJson(data[3]));
+    // print("fetch gitu 1");
+    // print(data[0]);
+    // list_book.add(Book.fromJson(data[0]));
+    // list_book.add(Book.fromJson(data[1]));
+    // list_book.add(Book.fromJson(data[2]));
+    // list_book.add(Book.fromJson(data[3]));
+    // print(data[97]);
+    // list_book.add(Book.fromJson(data[97]));
 
-    print("fetch gitu");
+    /// The line `print("fetch gitu");` is used to print the message "fetch gitu" to the console. It is
+    /// used as a debugging statement to check if the code execution reaches that point.
+    // print("fetch gitu");
     //TODO: Uncomment line dibawah buat nampilin semua data buku (berat 100>)
-    // for (var d in data) {
-    //     if (d != null) {
-    //         list_book.add(Book.fromJson(d));
-    //     }
-    // }
+    // var i = 100;
+    for (var d in data) {
+        if (d != null) {
+            list_book.add(Book.fromJson(d));
+        }
+    }
     return list_book;
 }
 
 @override
 Widget build(BuildContext context) {
+  User user = widget.user;
     return Scaffold(
         appBar: AppBar(
         title: const Text('Book'),
         ),
-        drawer: LeftDrawer(),
+        drawer: LeftDrawer(user: user),
         body: FutureBuilder(
             future: fetchBook(),
             builder: (context, AsyncSnapshot snapshot) {
@@ -78,42 +87,81 @@ Widget build(BuildContext context) {
                         ],
                     );
                 } else {
-                    return ListView.builder(
+                    return GridView.builder(
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2, // Number of items in each row
+                          crossAxisSpacing: 16.0, // Spacing between items horizontally
+                          mainAxisSpacing: 16.0, // Spacing between items vertically
+                        ),
                         itemCount: snapshot.data!.length,
-                        //itemCount: 1,
+                        // itemCount: 5,
                         itemBuilder: (_, index) => GestureDetector(
                                 onTap: () {
                                   // Navigate to the detail item page
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => ReviewPage(
-                                        book: snapshot.data![index],
-                                      ),
+                                      builder: (context){
+                                        return ReviewPage(
+                                          book: snapshot.data![index], user: user,
+                                        );
+                                      }
                                     ),
                                   );
                                 },
-                        
-                                child: Container(
-                                  margin: const EdgeInsets.symmetric(
-                                      horizontal: 16, vertical: 12),
-                                  padding: const EdgeInsets.all(20.0),
+                              
+                                child: Card(
+                                  //margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                                  //padding: const EdgeInsets.all(20.0),
+                                  elevation: 5,
                                   child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                      Text(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  /*
+                                  SizedBox(height: 20),
+                                  Image.network(
+                                    snapshot.data![index].fields?.coverImg ?? "",
+                                    height: 200,
+                                    width: 150,
+                                  ),
+                                  Text(
+                                    "${snapshot.data![index].fields.title}",
+                                    style: const TextStyle(
+                                      fontSize: 18.0,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  */
+                                  Expanded(
+                                    child: Image.network(
+                                      snapshot.data![index].fields?.coverImg ?? "",
+                                      //fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                  /*
+                                  Container(
+                                    height: 100,
+                                    decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                        image: NetworkImage(
+                                          snapshot.data![index].fields?.coverImg ?? "",
+                                        ),
+                                        //fit: BoxFit.cover
+                                      )
+                                    ),
+                                  ),
+                                  */
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
                                       "${snapshot.data![index].fields.title}",
                                       style: const TextStyle(
-                                          fontSize: 18.0,
-                                          fontWeight: FontWeight.bold,
+                                        fontSize: 14.0,
+                                        fontWeight: FontWeight.bold,
                                       ),
-                                      ),
-                                      const SizedBox(height: 10),
-                                      Text("${snapshot.data![index].fields.author}"),
-                                      const SizedBox(height: 10),
-                                      Text(
-                                          "${snapshot.data![index].fields.description}")
+                                    ),
+                                  ),
                                 ],
                                 ),
                             )));
