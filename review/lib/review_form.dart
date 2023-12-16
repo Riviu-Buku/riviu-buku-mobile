@@ -38,10 +38,14 @@ class _ReviewFormPageState extends State<ReviewFormPage> {
 
         return Scaffold(
           appBar: AppBar(
-            title: const Center(
-              child: Text('Form Review'),
-            ),
-            backgroundColor: Colors.indigo,
+            title: Text('Form Review',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+            backgroundColor: Color.fromRGBO(147, 129, 255, 1.000),
             foregroundColor: Colors.white,
             leading: IconButton(
               icon: Icon(Icons.arrow_back),
@@ -120,7 +124,7 @@ class _ReviewFormPageState extends State<ReviewFormPage> {
                     child: ElevatedButton(
                       style: ButtonStyle(
                         backgroundColor:
-                            MaterialStateProperty.all(Colors.indigo),
+                            MaterialStateProperty.all(Color.fromRGBO(254, 231, 192, 1)),
                       ),
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
@@ -161,7 +165,7 @@ class _ReviewFormPageState extends State<ReviewFormPage> {
                     },
                       child: const Text(
                         "Save",
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(color: Colors.black),
                       ),
                     ),
                   ),
