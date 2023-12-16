@@ -22,7 +22,7 @@ class User {
   // Create a factory method to convert a Map to a User instance
   factory User.fromMap(Map<String, dynamic> map) {
     return User(
-      id: map['id'] ?? 0,
+      id: map['user_id'] ?? 0,
       username: map['username'] ?? '',
       name: map['name'] ?? '',
       avatar: map['avatar'] ?? '',
@@ -36,7 +36,7 @@ class User {
   // Convert User instance to a Map
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
+      'user_id': id,
       'username': username,
       'name': name,
       'avatar': avatar,
