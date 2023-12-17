@@ -47,7 +47,7 @@ class MyHomePage extends StatelessWidget {
       case "Albums":
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => AlbumsPage()),
+          MaterialPageRoute(builder: (context) => AlbumsPage(user: user)),
         );
         break;
     }
