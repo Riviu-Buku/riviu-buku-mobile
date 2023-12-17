@@ -43,7 +43,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     final TextEditingController _passwordController = TextEditingController();
 
     Future<User?> loginBangIsa(String username, String password) async {
-        var res = await http.post(Uri.parse('http://127.0.0.1:8000/auth/login-flutter/'), body: jsonEncode({
+        var res = await http.post(Uri.parse('https://riviu-buku-d07-tk.pbp.cs.ui.ac.id/auth/login-flutter/'), body: jsonEncode({
             'username': username,
             'password': password,
         }));
