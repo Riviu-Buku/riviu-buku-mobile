@@ -43,11 +43,17 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     final TextEditingController _passwordController = TextEditingController();
 
     Future<User?> loginBangIsa(String username, String password) async {
-        var res = await http.post(Uri.parse('https://riviu-buku-d07-tk.pbp.cs.ui.ac.id/auth/login-flutter/'), body: jsonEncode({
+        var res = await http.post(Uri.parse('http://127.0.0.1:8000/auth/login-flutter/'), body: jsonEncode({
             'username': username,
             'password': password,
         }));
         final responseData = jsonDecode(res.body);
+        if(responseData["status"] == false){
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(
+                SnackBar(content: Text(responseData['message'])));
+        }
         final  userData = responseData['user'];
         User user = User.fromMap(userData);
         ref.read(userProvider.notifier).setUser(user);
@@ -134,7 +140,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                     ScaffoldMessenger.of(context)
                                         ..hideCurrentSnackBar()
                                         ..showSnackBar(
-                                            SnackBar(content: Text("Mantap Selamat datang, ${user.name}.")));
+                                            SnackBar(content: Text("Selamat datang, ${user.name}.")));
                                 }
                                 else {
                                     showDialog(
@@ -142,7 +148,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                         builder: (context) => AlertDialog(
                                             title: const Text('Login Gagal'),
                                             content:
-                                                Text('username atau password salah'),
+                                                Text('Username atau password salah'),
                                             actions: [
                                                 TextButton(
                                                     child: const Text('OK'),

@@ -4,6 +4,7 @@ import 'package:profile/screens/profilepage.dart';
 import 'package:riviu_buku/models/user.dart';
 import 'package:album/albumspage.dart';
 import 'package:mybooks/mybooks.dart';
+import 'package:riviu_buku/left_drawer.dart';
 
 class MyHomePage extends StatelessWidget {
   final User user;
@@ -75,6 +76,7 @@ class MyHomePage extends StatelessWidget {
         backgroundColor: Color.fromRGBO(147, 129, 255, 1.000),
         foregroundColor: Colors.white,
       ),
+      drawer: LeftDrawer(user: user),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(10.0),
@@ -83,7 +85,7 @@ class MyHomePage extends StatelessWidget {
               const Padding(
                 padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
                 child: Text(
-                  'Homepage',
+                  'Welcome to Riviu Buku!',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 30,

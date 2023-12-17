@@ -66,8 +66,22 @@ Widget build(BuildContext context) {
   User user = widget.user;
     return Scaffold(
         appBar: AppBar(
-        title: const Text('Book'),
-        ),
+            title: Text('Daftar Buku',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+            backgroundColor: Color.fromRGBO(147, 129, 255, 1.000),
+            foregroundColor: Colors.white,
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back),
+              onPressed: () {
+                Navigator.pop(context); // Pop the navigator when the back button is pressed
+              },
+            ),
+          ),
         drawer: LeftDrawer(user: user),
         body: FutureBuilder(
             future: fetchBook(),
