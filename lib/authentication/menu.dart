@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:homepage/list_book.dart';
 import 'package:profile/screens/profilepage.dart';
 import 'package:riviu_buku/models/user.dart';
+import 'package:album/albumspage.dart';
+import 'package:mybooks/mybooks.dart';
 
 class MyHomePage extends StatelessWidget {
   final User user;
@@ -10,7 +12,9 @@ class MyHomePage extends StatelessWidget {
   final List<ShopItem> items = [
     ShopItem("Lihat Produk", Icons.checklist),
     ShopItem("Tambah Produk", Icons.add_shopping_cart),
+    ShopItem("Buku Saya", Icons.person),
     ShopItem("Logout", Icons.logout),
+    ShopItem("Albums", Icons.collections_bookmark),
   ];
 
   void _navigateToPage(String itemName, BuildContext context) {
@@ -33,7 +37,19 @@ class MyHomePage extends StatelessWidget {
           MaterialPageRoute(builder: (context) => ProfilePage(user: user)),
         );
         break;
+        case "Buku Saya":
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => MyBookPage(user: user)),
+        );
+        break;
       // Add more cases for other items if needed
+      case "Albums":
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => AlbumsPage()),
+        );
+        break;
     }
   }
 

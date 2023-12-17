@@ -35,6 +35,7 @@ class Book {
 }
 
 class Fields {
+    int? user;
     String? title;
     String? author;
     String? description;
@@ -54,6 +55,7 @@ class Fields {
     List<int>? likedByUsers;
 
     Fields({
+        this.user,
          this.title,
          this.author,
          this.description,
@@ -146,6 +148,7 @@ class Fields {
         numRatings: json["numRatings"] ?? 0,
         numLikes: json["numLikes"] ?? 0,
         coverImg: json["coverImg"] ?? "",
+        user: json["user"] ?? -1,
         review: List<int>.from(json["review"]?.map((x) => x) ?? []), //how to print here?
         likedByUsers: List<int>.from(json["liked_by_users"]?.map((x) => x) ?? []),
       );
@@ -155,6 +158,7 @@ class Fields {
     }
 
     Map<String, dynamic> toJson() => {
+        "user": user,
         "title": title,
         "author": author,
         "description": description,
