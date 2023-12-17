@@ -31,7 +31,7 @@ class _OtherProfilePageState extends State<OtherProfilePage> {
 
   Future<Map<String, String>> fetchProfileUser() async {
     final response = await http.post(
-      Uri.parse('http://127.0.0.1:8000/profile/get-profile-user/'),
+      Uri.parse('https://riviu-buku-d07-tk.pbp.cs.ui.ac.id/profile/get-profile-user/'),
       body: jsonEncode(<String, String>{
         'user': widget.user,
       }),
@@ -56,7 +56,7 @@ class _OtherProfilePageState extends State<OtherProfilePage> {
   Future<List<Book>> fetchLikedBooks() async {
     final response = await http.post(
       Uri.parse(
-          'http://127.0.0.1:8000/profile/get-books-liked-by-user-flutter/'),
+          'https://riviu-buku-d07-tk.pbp.cs.ui.ac.id/profile/get-books-liked-by-user-flutter/'),
       body: jsonEncode(<String, String>{
         'user': widget.user,
       }),
