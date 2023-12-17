@@ -77,7 +77,7 @@ Terima kasih telah membaca cerita Riviu Buku, selamat membaca dan mereview!😇�
 
 ## 📃 Daftar Modul Yang Akan Diimplementasikan 📃
 
-- 📕 Modul untuk me-review buku yang oleh pengguna yang disertai oleh leaderboard berdasarkan review terbaik menggunakan fitur upvote dan downvote; dikerjakan oleh Samuel Taniel Mulyadi;</p> 
+- 📕 Modul untuk me-review buku yang oleh pengguna yang disertai oleh like buku, add, dan delete review yang dibuat pengguna; dikerjakan oleh Samuel Taniel Mulyadi;</p> 
 - 📕 Modul koleksi, kategori, dan favorit yang memungkinkan pengguna untuk menyimpan daftar buku favorit dan fungsi untuk menambahkan buku ke album/wishlist pengguna serta upload buku untuk bisa di review; dikerjakan oleh Ken Balya</p>
 - 📕 Modul homepage yang menyajikan rekomendasi berdasarkan jumlah likes pada suatu kategori buku oleh pengguna; dikerjakan oleh Khansa Mahira</p>
 - 📕 Modul profile yang bisa melihat koleksi buku favorit dan mengedit detail profile; dikerjakan oleh Syazantri Salsabila</p>
