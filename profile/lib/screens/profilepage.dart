@@ -377,7 +377,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                       ),
                                       boxShadow: [
                                         BoxShadow(
-                                          color: Colors.grey.withOpacity(0.5),
+                                          color: Color.fromARGB(255, 189, 161, 220).withOpacity(0.4),
                                           spreadRadius: 2,
                                           blurRadius: 8,
                                         ),
