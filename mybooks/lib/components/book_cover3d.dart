@@ -42,7 +42,7 @@ class _BookCover3DState extends State<BookCover3D> {
                   borderRadius: BorderRadius.circular(8.0),
                   child: Image.network(
                     widget.imageUrl,
-                    fit: BoxFit.fitWidth,
+                    fit: BoxFit.fill,
                   ),
                 ),
               ),
