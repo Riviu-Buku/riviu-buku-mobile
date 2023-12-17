@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
-import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
 import 'package:riviu_buku/left_drawer.dart';
 import 'package:riviu_buku/models/user.dart';
 import 'mybooks.dart';
@@ -24,7 +24,7 @@ class _ShopFormPageState extends State<ShopFormPage> {
     String _description = "";
     @override
     Widget build(BuildContext context) {
-      final request = context.watch<CookieRequest>();
+      
         return Scaffold(
   appBar: AppBar(
     title: const Center(
@@ -97,6 +97,7 @@ class _ShopFormPageState extends State<ShopFormPage> {
 Padding(
   padding: const EdgeInsets.all(8.0),
   child: TextFormField(
+    maxLines: 5,
     decoration: InputDecoration(
       hintText: "Deskripsi",
       labelText: "Deskripsi",
@@ -131,15 +132,16 @@ Align(
     if (_formKey.currentState!.validate()) {
         // Kirim ke Django dan tunggu respons
         // TODO: Ganti URL dan jangan lupa tambahkan trailing slash (/) di akhir URL!
-        final response = await request.postJson(
-        "http://127.0.0.1:8000/create-flutter/",
-        jsonEncode(<String, String>{
+        final response = await http.post(
+        Uri.parse('http://127.0.0.1:8000/upload_buku/upload-flutter/'),
+        body: jsonEncode(<String, String>{
             'movie_name': _name,
             'rating': _penulis,
             'description': _description,
             // TODO: Sesuaikan field data sesuai dengan aplikasimu
         }));
-        if (response['status'] == 'success') {
+        final responseData = jsonDecode(response.body);
+        if (responseData['status'] == 'success') {
             ScaffoldMessenger.of(context)
                 .showSnackBar(const SnackBar(
             content: Text("Buku baru berhasil disimpan!"),
@@ -158,7 +160,7 @@ Align(
     }
 },
           child: const Text(
-            "Save",
+            "Upload Buku",
             style: TextStyle(color: Colors.white),
           ),
         ),

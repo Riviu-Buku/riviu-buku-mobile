@@ -22,11 +22,7 @@ class BuyBookWrappper extends StatelessWidget {
           BookCover3D(
             imageUrl: book.fields!.coverImg ?? "assets/images/defaultCoverImg.jpg",
           ),
-          Text(
-            "${book.fields!.title}",
-            style: Theme.of(context).textTheme.titleSmall,
-            textAlign: TextAlign.center,
-          ),
+          
         ],
       ),
     );
