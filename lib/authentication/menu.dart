@@ -30,7 +30,10 @@ class MyHomePage extends StatelessWidget {
 
   void _navigateToPage(String itemName, BuildContext context) {
     Future<User?> logout(User userIn) async {
-        var res = await http.post(Uri.parse('http://127.0.0.1:8000/auth/logout/'), body: jsonEncode({
+        var res = await http.post(Uri.parse(
+          // 'http://127.0.0.1:8000/auth/logout/'
+          'https://riviu-buku-d07-tk.pbp.cs.ui.ac.id/auth/logout/'
+          ), body: jsonEncode({
             'user': userIn,
         }));
         final responseData = jsonDecode(res.body);

@@ -45,7 +45,10 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
     final TextEditingController _passwordConfirmController = TextEditingController();
 
     Future<User?> signUp(String username, String password1, String password2) async {
-        var res = await http.post(Uri.parse('http://127.0.0.1:8000/auth/register-flutter/'), body: jsonEncode({
+        var res = await http.post(Uri.parse(
+          // 'http://127.0.0.1:8000/auth/register-flutter/'
+          'https://riviu-buku-d07-tk.pbp.cs.ui.ac.id/auth/register-flutter/'
+          ), body: jsonEncode({
             'username': username,
             'password1': password1,
             'password2': password2,
