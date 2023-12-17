@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:riviu_buku/authentication/login.dart';
+import 'package:riviu_buku/authentication/signup.dart';
 
 class WelcomePage extends StatelessWidget {
   @override
@@ -78,7 +79,7 @@ class WelcomePage extends StatelessWidget {
                     minWidth: double.infinity,
                     height: 60,
                     onPressed: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=> LoginPage()));
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=> SignUpPage()));
 
                     },
                     color: Color.fromRGBO(184,184,255,1.000),
