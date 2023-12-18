@@ -35,8 +35,9 @@ class WelcomePage extends StatelessWidget {
                   SizedBox(
                     height: 30,
                   ),
-                  Image(image: NetworkImage("https://res.cloudinary.com/dcf91ipuo/image/upload/v1702367781/logoRiviuBuku_wypvmq.png"),
-                        height: 100)
+                  Image.asset('assets/images/logo-riviu-buku.png', height: 100)
+                  // Image(image: NetworkImage("https://res.cloudinary.com/dcf91ipuo/image/upload/v1702367781/logoRiviuBuku_wypvmq.png"),
+                  //       height: 100)
                 ],
               ),
               Container(

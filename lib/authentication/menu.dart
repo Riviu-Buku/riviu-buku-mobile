@@ -21,11 +21,11 @@ class MyHomePage extends StatelessWidget {
   MyHomePage(this.user);
 
   final List<ShopItem> items = [
-    ShopItem("Lihat Produk", Icons.checklist),
-    ShopItem("Tambah Produk", Icons.add_shopping_cart),
+    ShopItem("Daftar Buku", Icons.checklist),
     ShopItem("Buku Saya", Icons.person),
     ShopItem("Logout", Icons.logout),
     ShopItem("Albums", Icons.collections_bookmark),
+    ShopItem("Profile", Icons.account_circle)
   ];
 
   void _navigateToPage(String itemName, BuildContext context) {
@@ -126,13 +126,6 @@ class MyHomePage extends StatelessWidget {
               'Riviu Buku',
             ),
             SizedBox(width: 16),
-            Text(
-              'Profile',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
           ],
         ),
         backgroundColor: Color.fromRGBO(147, 129, 255, 1.000),
@@ -168,11 +161,6 @@ class MyHomePage extends StatelessWidget {
                       _navigateToPage(item.name, context);
                     });
                   }),
-                  ProfileCard(
-                    onTap: () {
-                      _navigateToPage("Profile", context);
-                    },
-                  ),
                 ],
               ),
             ],
@@ -216,43 +204,6 @@ class ShopCard extends StatelessWidget {
                 const Padding(padding: EdgeInsets.all(3)),
                 Text(
                   item.name,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(color: Colors.white),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class ProfileCard extends StatelessWidget {
-  final VoidCallback onTap;
-
-  const ProfileCard({Key? key, required this.onTap}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: Color.fromRGBO(147, 129, 255, 1.000),
-      child: InkWell(
-        onTap: onTap,
-        child: Container(
-          padding: const EdgeInsets.all(8),
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.account_circle,
-                  color: Colors.white,
-                  size: 30.0,
-                ),
-                const Padding(padding: EdgeInsets.all(3)),
-                Text(
-                  'Profile',
                   textAlign: TextAlign.center,
                   style: const TextStyle(color: Colors.white),
                 ),
