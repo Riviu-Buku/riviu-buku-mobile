@@ -197,15 +197,12 @@ class _EditAlbumPageState extends State<EditAlbumPage> {
                 TextButton(
                   onPressed: () {
                     // Dismiss the dialog
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => AlbumsPage(user: widget.user)),
-                    );
+                    Navigator.of(context).pop();
                   },
                   child: Text('Cancel'),
                 ),
                 TextButton(
-                  onPressed: () {
+                  onPressed: git a() {
                     // Delete the album and dismiss the dialog
                     deleteAlbum();
                     Navigator.push(
