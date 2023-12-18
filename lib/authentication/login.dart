@@ -10,6 +10,7 @@ import 'package:http/http.dart' as http;
 import 'package:riviu_buku/models/user.dart';
 import 'package:riviu_buku/provider/user_provider.dart';
 import 'package:riviu_buku/components/background.dart';
+import 'package:riviu_buku/authentication/signup.dart';
 
 void main() {
     runApp(const LoginApp());
@@ -174,7 +175,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               margin: EdgeInsets.symmetric(horizontal: 40, vertical: 10),
               child: GestureDetector(
                 onTap: () => {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()))
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => SignUpPage()))
                 },
                 child: Text(
                   "Don't Have an Account? Sign up",
