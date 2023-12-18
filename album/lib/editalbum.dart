@@ -202,7 +202,7 @@ class _EditAlbumPageState extends State<EditAlbumPage> {
                   child: Text('Cancel'),
                 ),
                 TextButton(
-                  onPressed: git a() {
+                  onPressed: () {
                     // Delete the album and dismiss the dialog
                     deleteAlbum();
                     Navigator.push(
