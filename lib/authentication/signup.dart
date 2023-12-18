@@ -196,7 +196,23 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
 
             ),
 
-            
+            Container(
+              alignment: Alignment.centerRight,
+              margin: EdgeInsets.symmetric(horizontal: 40, vertical: 10),
+              child: GestureDetector(
+                onTap: () => {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()))
+                },
+                child: Text(
+                  "Already Have an Account? Log in",
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    color: Color.fromRGBO(147,129,255,1.000)
+                  ),
+                ),
+              ),
+            )
           ],
         ),
       ),

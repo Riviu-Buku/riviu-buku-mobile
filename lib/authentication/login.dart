@@ -114,17 +114,17 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               ),
             ),
 
-            Container(
-              alignment: Alignment.centerRight,
-              margin: EdgeInsets.symmetric(horizontal: 40, vertical: 10),
-              child: Text(
-                "Forgot your password?",
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Color.fromRGBO(147,129,255,1.000)
-                ),
-              ),
-            ),
+            // Container(
+            //   alignment: Alignment.centerRight,
+            //   margin: EdgeInsets.symmetric(horizontal: 40, vertical: 10),
+            //   child: Text(
+            //     "Forgot your password?",
+            //     style: TextStyle(
+            //       fontSize: 12,
+            //       color: Color.fromRGBO(147,129,255,1.000)
+            //     ),
+            //   ),
+            // ),
 
             SizedBox(height: size.height * 0.05),
 
