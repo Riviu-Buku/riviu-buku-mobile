@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:riviu_buku/models/user.dart';
 import 'package:riviu_buku/models/book.dart';
 import 'package:review/reviewpage.dart';
-import 'package:homepage/list_book.dart';
-import 'package:profile/screens/create_profile_form.dart';
 // import 'package:profile/screens/update_profile_form.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -31,7 +29,7 @@ class _OtherProfilePageState extends State<OtherProfilePage> {
 
   Future<Map<String, String>> fetchProfileUser() async {
     final response = await http.post(
-      Uri.parse('https://riviu-buku-d07-tk.pbp.cs.ui.ac.id/profile/get-profile-user/'),
+      Uri.parse('https://riviu-buku-d07-tk.pbp.cs.ui.ac.id/profile/get-profile-other-user/'),
       body: jsonEncode(<String, String>{
         'user': widget.user,
       }),

@@ -1,14 +1,10 @@
 // ignore_for_file: prefer_const_constructors_in_immutables
 
 import 'package:flutter/material.dart';
+import 'package:profile/screens/profilepage.dart';
 import 'package:riviu_buku/authentication/menu.dart';
-// import 'package:shopping_list/screens/shoplist_form.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 import 'package:homepage/list_book.dart';
-import 'package:riviu_buku/models/book.dart';
 import 'package:riviu_buku/models/user.dart';
-import 'package:riviu_buku/provider/user_provider.dart';
 import 'package:mybooks/mybooks.dart';
 
 class LeftDrawer extends StatelessWidget {
@@ -35,15 +31,15 @@ class LeftDrawer extends StatelessWidget {
                       color: Colors.black,
                     ),
                   ),
-                  // Padding(padding: EdgeInsets.all(10)),
-                  // Text("Catat seluruh keperluan belanjamu di sini!",
-                  //   textAlign: TextAlign.center,
-                  //   style: TextStyle(
-                  //     fontSize: 15,
-                  //     color: Colors.black,
-                  //     fontWeight: FontWeight.normal,
-                  //   ),
-                  // ),
+                  Padding(padding: EdgeInsets.all(10)),
+                  Text("Explore Riviu Buku",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: Colors.black,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -81,7 +77,7 @@ class LeftDrawer extends StatelessWidget {
                 Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => Homepage(user: user)),
+                  builder: (context) => MyBookPage(user: user)),
                 );
               },
           ),
@@ -93,7 +89,7 @@ class LeftDrawer extends StatelessWidget {
                 Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => Homepage(user: user)),
+                  builder: (context) => ProfilePage(user: user)),
                 );
               },
           ),

@@ -36,7 +36,6 @@ class _EditProfileFormPageState extends State<EditProfileFormPage> {
   String _email = '';
   String _handphone = '';
   String _address = '';
-  late Future<Map<String, String>> _user;
   late Map<String, String> userMap;
   TextEditingController _nameController = TextEditingController();
   TextEditingController _emailController = TextEditingController();
@@ -48,37 +47,19 @@ class _EditProfileFormPageState extends State<EditProfileFormPage> {
   @override
   void initState() {
     super.initState();
-    _user = fetchProfileUser();
+    // _user = fetchProfileUser();
     _nameController.text = widget.name;
+    _name = widget.name;
     _emailController.text = widget.email;
+    _email = widget.email;
     _avatarController.text = widget.avatar;
+    _avatar = widget.avatar;
     _bioController.text = widget.bio;
+    _bio = widget.bio;
     _handphoneController.text = widget.handphone;
+    _handphone = widget.handphone;
     _addressController.text = widget.address;
-  }
-
-  Future<Map<String, String>> fetchProfileUser() async {
-    final response = await http.post(
-      Uri.parse('https://riviu-buku-d07-tk.pbp.cs.ui.ac.id/profile/get-profile-user/'),
-      body: jsonEncode(<String, String>{
-        'user': widget.user.username,
-      }),
-      headers: {"Content-Type": "application/json"},
-    );
-    if (response.statusCode == 200) {
-      final responseData = jsonDecode(response.body);
-      userMap = {
-        "name": responseData["name"],
-        "avatar": responseData["avatar"],
-        "email": responseData["email"],
-        "bio": responseData["bio"],
-        "handphone": responseData["handphone"],
-        "address": responseData["address"]
-      };
-      return userMap;
-    } else {
-      throw Exception('Failed to load profile data');
-    }
+    _address = widget.address;
   }
 
   @override
@@ -103,12 +84,12 @@ class _EditProfileFormPageState extends State<EditProfileFormPage> {
           user: user,
         ),
         body: Container(
-          decoration: BoxDecoration (
+          decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
-              Color.fromARGB(255, 191, 156, 239),
-              Color.fromARGB(255, 216, 191, 247),
-              Color.fromARGB(255, 255, 223, 182),
+                Color.fromARGB(255, 191, 156, 239),
+                Color.fromARGB(255, 216, 191, 247),
+                Color.fromARGB(255, 255, 223, 182),
               ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
@@ -169,8 +150,8 @@ class _EditProfileFormPageState extends State<EditProfileFormPage> {
                                 child: ClipOval(
                                   child: Image.asset(
                                     'assets/images/avatar1.jpeg',
-                                    width: 50.0,
-                                    height: 50.0,
+                                    width: 100.0,
+                                    height: 100.0,
                                   ),
                                 ),
                                 value: 'one',
@@ -179,8 +160,8 @@ class _EditProfileFormPageState extends State<EditProfileFormPage> {
                                 child: ClipOval(
                                   child: Image.asset(
                                     'assets/images/avatar2.jpeg',
-                                    width: 50.0,
-                                    height: 50.0,
+                                    width: 100.0,
+                                    height: 100.0,
                                   ),
                                 ),
                                 value: 'two',
@@ -189,8 +170,8 @@ class _EditProfileFormPageState extends State<EditProfileFormPage> {
                                 child: ClipOval(
                                   child: Image.asset(
                                     'assets/images/avatar3.jpeg',
-                                    width: 50.0,
-                                    height: 50.0,
+                                    width: 100.0,
+                                    height: 100.0,
                                   ),
                                 ),
                                 value: 'three',
@@ -199,8 +180,8 @@ class _EditProfileFormPageState extends State<EditProfileFormPage> {
                                 child: ClipOval(
                                   child: Image.asset(
                                     'assets/images/avatar4.jpeg',
-                                    width: 50.0,
-                                    height: 50.0,
+                                    width: 100.0,
+                                    height: 100.0,
                                   ),
                                 ),
                                 value: 'four',
@@ -209,8 +190,8 @@ class _EditProfileFormPageState extends State<EditProfileFormPage> {
                                 child: ClipOval(
                                   child: Image.asset(
                                     'assets/images/avatar5.jpeg',
-                                    width: 50.0,
-                                    height: 50.0,
+                                    width: 100.0,
+                                    height: 100.0,
                                   ),
                                 ),
                                 value: 'five',
@@ -219,8 +200,8 @@ class _EditProfileFormPageState extends State<EditProfileFormPage> {
                                 child: ClipOval(
                                   child: Image.asset(
                                     'assets/images/avatar6.jpeg',
-                                    width: 50.0,
-                                    height: 50.0,
+                                    width: 100.0,
+                                    height: 100.0,
                                   ),
                                 ),
                                 value: 'six',
@@ -229,8 +210,8 @@ class _EditProfileFormPageState extends State<EditProfileFormPage> {
                                 child: ClipOval(
                                   child: Image.asset(
                                     'assets/images/avatar7.jpeg',
-                                    width: 50.0,
-                                    height: 50.0,
+                                    width: 100.0,
+                                    height: 100.0,
                                   ),
                                 ),
                                 value: 'seven',
@@ -239,8 +220,8 @@ class _EditProfileFormPageState extends State<EditProfileFormPage> {
                                 child: ClipOval(
                                   child: Image.asset(
                                     'assets/images/avatar-default.jpeg',
-                                    width: 50.0,
-                                    height: 50.0,
+                                    width: 100.0,
+                                    height: 100.0,
                                   ),
                                 ),
                                 value: 'eight',
@@ -401,7 +382,7 @@ class _EditProfileFormPageState extends State<EditProfileFormPage> {
                                 if (_formKey.currentState!.validate()) {
                                   final response = await http.post(
                                       Uri.parse(
-                                          'https://riviu-buku-d07-tk.pbp.cs.ui.ac.id/profile/complete-profile-flutter/'),
+                                          'https://riviu-buku-d07-tk.pbp.cs.ui.ac.id/profile/complete-profile-flutter/${widget.user.id}/'),
                                       body: jsonEncode(<String, String>{
                                         'username': widget.user.username,
                                         'name': _name,
@@ -411,17 +392,17 @@ class _EditProfileFormPageState extends State<EditProfileFormPage> {
                                         'handphone': _handphone,
                                         'address': _address,
                                       }));
+
                                   final responseData =
                                       jsonDecode(response.body);
+
                                   if (responseData['status'] == 'success') {
                                     ScaffoldMessenger.of(context)
                                         .showSnackBar(const SnackBar(
                                       content: Text(
                                           "Profilemu berhasil dilengkapi!"),
                                     ));
-                                    Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(builder: (context) {
+                                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
                                         return ProfilePage(
                                           user: widget.user,
                                         );
