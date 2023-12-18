@@ -22,9 +22,9 @@ class _ProductPageState extends State<Homepage> {
 Future<List<Book>> fetchBook() async {
     // TODO: Ganti URL dan jangan lupa tambahkan trailing slash (/) di akhir URL!
     var url = Uri.parse(
-        'http://127.0.0.1:8000/json/'
+        // 'http://127.0.0.1:8000/json/'
         // TODO: 
-        // 'https://riviu-buku-d07-tk.pbp.cs.ui.ac.id/json/'
+        'https://riviu-buku-d07-tk.pbp.cs.ui.ac.id/json/'
         );
     var response = await http.get(
         url,

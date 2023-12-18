@@ -18,7 +18,7 @@ class MyHomePage extends StatelessWidget {
     ShopItem("Buku Saya", Icons.person, Color.fromARGB(255, 201, 123, 226)),
     ShopItem("Logout", Icons.logout, Color.fromARGB(255, 224, 97, 97)),
     ShopItem("Albums", Icons.collections_bookmark, const Color.fromARGB(255, 112, 165, 208)),
-    ShopItem("Profile", Icons.account_circle, Color.fromARGB(255, 255, 208, 128)),
+    ShopItem("Profile", Icons.account_circle, Color.fromARGB(255, 255, 195, 98)),
   ];
 
   void _navigateToPage(String itemName, BuildContext context) {
