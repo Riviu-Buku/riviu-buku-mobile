@@ -2,7 +2,7 @@
 
 <br />
 <div align="center">
-  <a href="http://samuel-taniel-tutorial.pbp.cs.ui.ac.id">
+  <a href="https://install.appcenter.ms/orgs/riviu-buku/apps/riviu-buku/distribution_groups/public">
     <img src="https://github.com/Riviu-Buku/riviu-buku/blob/main/logo.png" alt="Logo Riviu Buku" width="80" height="80">
   </a>
 
@@ -11,13 +11,22 @@
   <p align="center">
     Riviu Buku: Ulas Buku Untukmu
     <br />
-    <a href="https://github.com/Riviu-Buku/riviu-buku"><strong>Explore the code »</strong> </a>
+    <a href="https://github.com/Riviu-Buku/riviu-buku-mobile"><strong>Explore the code »</strong> </a>
     <br />
     <br />
-    <a href="http://samuel-taniel-tutorial.pbp.cs.ui.ac.id">View Site</a>
+    <a href="https://install.appcenter.ms/orgs/riviu-buku/apps/riviu-buku/distribution_groups/public">View Download App Site</a>
     ·
-    <a href="https://pbp-fasilkom-ui.github.io/ganjil-2024/assignments/group/midterm"> View Assignment </a>
+    <a href="https://pbp-fasilkom-ui.github.io/ganjil-2024/assignments/group/final"> View Assignment </a>
   </p>
+</div>
+<div align="center">
+  <a href="https://appcenter.ms">
+    <img src="https://build.appcenter.ms/v0.1/apps/b32cb2cf-819c-443f-8eb0-a6f631f9027f/branches/main/badge" alt="Build status" />
+  </a>
+  &nbsp; | &nbsp;
+  <a href="https://install.appcenter.ms/orgs/riviu-buku/apps/riviu-buku/distribution_groups/public"> Download App</a>
+  <br />
+  <br />
 </div>
 
 <details>
@@ -68,7 +77,7 @@ Terima kasih telah membaca cerita Riviu Buku, selamat membaca dan mereview!😇�
 
 ## 📃 Daftar Modul Yang Akan Diimplementasikan 📃
 
-- 📕 Modul untuk me-review buku yang oleh pengguna yang disertai oleh leaderboard berdasarkan review terbaik menggunakan fitur upvote dan downvote; dikerjakan oleh Samuel Taniel Mulyadi;</p> 
+- 📕 Modul untuk me-review buku yang oleh pengguna yang disertai oleh like buku, add, dan delete review yang dibuat pengguna; dikerjakan oleh Samuel Taniel Mulyadi;</p> 
 - 📕 Modul koleksi, kategori, dan favorit yang memungkinkan pengguna untuk menyimpan daftar buku favorit dan fungsi untuk menambahkan buku ke album/wishlist pengguna serta upload buku untuk bisa di review; dikerjakan oleh Ken Balya</p>
 - 📕 Modul homepage yang menyajikan rekomendasi berdasarkan jumlah likes pada suatu kategori buku oleh pengguna; dikerjakan oleh Khansa Mahira</p>
 - 📕 Modul profile yang bisa melihat koleksi buku favorit dan mengedit detail profile; dikerjakan oleh Syazantri Salsabila</p>

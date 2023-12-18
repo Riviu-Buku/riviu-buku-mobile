@@ -59,7 +59,7 @@ class _EditProfileFormPageState extends State<EditProfileFormPage> {
 
   Future<Map<String, String>> fetchProfileUser() async {
     final response = await http.post(
-      Uri.parse('http://127.0.0.1:8000/profile/get-profile-user/'),
+      Uri.parse('https://riviu-buku-d07-tk.pbp.cs.ui.ac.id/profile/get-profile-user/'),
       body: jsonEncode(<String, String>{
         'user': widget.user.username,
       }),
@@ -401,7 +401,7 @@ class _EditProfileFormPageState extends State<EditProfileFormPage> {
                                 if (_formKey.currentState!.validate()) {
                                   final response = await http.post(
                                       Uri.parse(
-                                          'http://127.0.0.1:8000/profile/complete-profile-flutter/'),
+                                          'https://riviu-buku-d07-tk.pbp.cs.ui.ac.id/profile/complete-profile-flutter/'),
                                       body: jsonEncode(<String, String>{
                                         'username': widget.user.username,
                                         'name': _name,

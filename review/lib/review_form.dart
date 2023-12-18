@@ -38,10 +38,14 @@ class _ReviewFormPageState extends State<ReviewFormPage> {
 
         return Scaffold(
           appBar: AppBar(
-            title: const Center(
-              child: Text('Form Review'),
-            ),
-            backgroundColor: Colors.indigo,
+            title: Text('Form Review',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+            backgroundColor: Color.fromRGBO(147, 129, 255, 1.000),
             foregroundColor: Colors.white,
             leading: IconButton(
               icon: Icon(Icons.arrow_back),
@@ -120,14 +124,14 @@ class _ReviewFormPageState extends State<ReviewFormPage> {
                     child: ElevatedButton(
                       style: ButtonStyle(
                         backgroundColor:
-                            MaterialStateProperty.all(Colors.indigo),
+                            MaterialStateProperty.all(Color.fromRGBO(254, 231, 192, 1)),
                       ),
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
                             // Kirim ke Django dan tunggu respons
                             // TODO: Ganti URL dan jangan lupa tambahkan trailing slash (/) di akhir URL!
                             final response = await http.post(Uri.parse(
-                              'http://127.0.0.1:8000/book-detail/create-review-flutter/'
+                              'https://riviu-buku-d07-tk.pbp.cs.ui.ac.id/book-detail/create-review-flutter/'
                               )
                             ,body: jsonEncode(<String, String>{
                                 'bookId': widget.book.pk.toString(),
@@ -141,14 +145,20 @@ class _ReviewFormPageState extends State<ReviewFormPage> {
                                     .showSnackBar(const SnackBar(
                                 content: Text("Produk baru berhasil disimpan!"),
                                 ));
+                                // Pop the current route from the stack
+                                Navigator.pop(context);
+
+                                // Push the new replacement route
                                 Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(builder: (context){
-                                        return ReviewPage(
-                                          book: widget.book, user: user,
-                                        );
-                                      }
-                                    ),
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) {
+                                      return ReviewPage(
+                                        book: widget.book,
+                                        user: user,
+                                      );
+                                    },
+                                  ),
                                 );
                             } else {
                                 ScaffoldMessenger.of(context)
@@ -161,7 +171,7 @@ class _ReviewFormPageState extends State<ReviewFormPage> {
                     },
                       child: const Text(
                         "Save",
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(color: Colors.black),
                       ),
                     ),
                   ),
