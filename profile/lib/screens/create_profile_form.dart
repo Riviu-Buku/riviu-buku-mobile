@@ -341,7 +341,7 @@ class _CompleteProfileFormPageState extends State<CompleteProfileFormPage> {
                       if (_formKey.currentState!.validate()) {
                         final response = await http.post(
                             Uri.parse(
-                                'http://127.0.0.1:8000/profile/complete-profile-flutter/'),
+                                'https://riviu-buku-d07-tk.pbp.cs.ui.ac.id/profile/complete-profile-flutter/'),
                             body: jsonEncode(<String, String>{
                               'username': widget.user.username,
                               'name': _name,

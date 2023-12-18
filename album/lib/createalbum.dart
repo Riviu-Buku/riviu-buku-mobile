@@ -7,6 +7,8 @@ import 'package:riviu_buku/models/user.dart';
 import 'package:album/albumspage.dart';
 import 'package:review/reviewpage.dart';
 
+import 'albumpage.dart';
+
 class CreateAlbumPage extends StatefulWidget {
   final User user;
   CreateAlbumPage({Key? key, required this.user}) : super(key: key);
@@ -40,7 +42,6 @@ class _CreateAlbumPageState extends State<CreateAlbumPage> {
       throw Exception('Failed to load books');
     }
   }
-
 
   Widget buildSelectedBooks() {
     return GridView.builder(
@@ -91,8 +92,8 @@ class _CreateAlbumPageState extends State<CreateAlbumPage> {
     );
   }
 
-  Future<void> createAlbum() async {
-    var url = Uri.parse('http://127.0.0.1:8000/album/create-album-flutter/'); // replace with your Django server URL
+  Future<album.Album> createAlbum() async {
+    var url = Uri.parse('http://127.0.0.1:8000/album/create-album-flutter/');
 
     var response = await http.post(
       url,
@@ -101,18 +102,25 @@ class _CreateAlbumPageState extends State<CreateAlbumPage> {
         'name': _nameController.text,
         'description': _descriptionController.text,
         'books': _selectedBooks,
-        'user': widget.user.username
+        'user': widget.user.username,
       }),
     );
 
-    if (response.statusCode == 200) {
-      // If the server returns a 200 OK response, then the album was created successfully.
+    if (response.statusCode == 201) {
+      // If the server returns a 201 Created response, the album was created successfully.
       print('Album created successfully');
+
+      // Parse the JSON response and return the Album object
+      Map<String, dynamic> jsonResponse = json.decode(response.body);
+      return album.Album.fromJson(jsonResponse['album']);
     } else {
-      // If the server returns an error response, then the album was not created.
-      print('Failed to create album');
+      // If the server returns an error response, print the error message and return null.
+      print('Failed to create album: ${response.statusCode}');
+      return album.Album(model: '', pk: 0, fields: album.Fields(name: '', slug: '', user: 0, description: '', coverImage: '', books: []));
     }
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -151,7 +159,8 @@ class _CreateAlbumPageState extends State<CreateAlbumPage> {
                 hintText: 'Search for books',
               ),
               onChanged: (value) {
-                // TODO: Implement search functionality
+                // Call fetchBooks when the search query changes
+                setState(() {});
               },
             ),
             SizedBox(height: 16.0),
@@ -229,12 +238,12 @@ class _CreateAlbumPageState extends State<CreateAlbumPage> {
               child: buildSelectedBooks(),
             ),
             ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
                 // TODO: Implement create album functionality
-                createAlbum();
+                album.Album createdAlbum = await createAlbum();
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => AlbumsPage(user: user)),
+                  MaterialPageRoute(builder: (context) => AlbumDetailsPage(album: createdAlbum, user: user)),
                 );
               },
               child: Text('Create'),

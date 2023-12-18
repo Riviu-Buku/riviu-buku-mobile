@@ -1,12 +1,12 @@
 class User {
-  final int id;
-  final String username;
-  final String name;
-  final String avatar;
-  final String email;
-  final String handphone;
-  final String bio;
-  final String address;
+  int id;
+  String username;
+  String name;
+  String avatar;
+  String email;
+  String handphone;
+  String bio;
+  String address;
 
   User({
     required this.id,
@@ -46,4 +46,26 @@ class User {
       'address': address,
     };
   }
+
+  factory User.fromJson(Map<String, dynamic> json) => User(
+      id: json['user_id'] ?? 0,
+      username: json['username'] ?? '',
+      name: json['name'] ?? '',
+      avatar: json['avatar'] ?? '',
+      email: json['email'] ?? '',
+      handphone: json['handphone'] ?? '',
+      bio: json['bio'] ?? '',
+      address: json['address'] ?? '',
+    );
+
+    Map<String, dynamic> toJson() => {
+      'user_id': id,
+      'username': username,
+      'name': name,
+      'avatar': avatar,
+      'email': email,
+      'handphone': handphone,
+      'bio': bio,
+      'address': address,
+    };
 }

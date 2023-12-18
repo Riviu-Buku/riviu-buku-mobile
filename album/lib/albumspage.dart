@@ -29,10 +29,10 @@ class _AlbumsPageState extends State<AlbumsPage> {
   }
 
 
-  void viewAlbum(Album album) {
+  void viewAlbum(Album album, User user) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => AlbumDetailsPage(album: album)),
+      MaterialPageRoute(builder: (context) => AlbumDetailsPage(album: album, user: user)),
     );
   }
 
@@ -106,7 +106,7 @@ class _AlbumsPageState extends State<AlbumsPage> {
                                               TextStyle(color: Colors.white)),
                                       ElevatedButton(
                                         onPressed: () =>
-                                            viewAlbum(snapshot.data![index]),
+                                            viewAlbum(snapshot.data![index], user),
                                         child: Text('View Album'),
                                       ),
                                     ],
