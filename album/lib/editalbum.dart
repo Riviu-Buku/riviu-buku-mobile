@@ -212,7 +212,7 @@ class _EditAlbumPageState extends State<EditAlbumPage> {
                   onPressed: () {
                     // Delete the album and dismiss the dialog
                     deleteAlbum();
-                    Navigator.push(
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(builder: (context) => AlbumsPage(user: widget.user)),
                     );
@@ -426,7 +426,7 @@ class _EditAlbumPageState extends State<EditAlbumPage> {
                 ElevatedButton(
                   onPressed: () {
                     updateAlbum();
-                    Navigator.push(
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(builder: (context) => AlbumDetailsPage(album: widget.album, user: user)),
                     );
