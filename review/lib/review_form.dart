@@ -56,8 +56,30 @@ class _ReviewFormPageState extends State<ReviewFormPage> {
           ),
           // NOTE: Tambahkan drawer yang sudah dibuat di sini
         drawer: LeftDrawer(user: user,),
-
-        body: Form(
+        body: Container(
+        decoration: BoxDecoration (
+            gradient: LinearGradient(
+              colors: [
+              Color.fromARGB(255, 191, 156, 239),
+              Color.fromARGB(255, 216, 191, 247),
+              Color.fromARGB(255, 255, 223, 182),
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+        ),
+        // color: Color.fromRGBO(184, 184, 255, 1.0),
+        child: Center(
+          child: Card(
+            color: Colors.white.withOpacity(1), 
+            elevation: 5,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15.0),
+            ),
+            margin: EdgeInsets.all(16.0),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+        child: Form(
           key: _formKey,
           child: SingleChildScrollView(
             child: Column(
@@ -182,7 +204,11 @@ class _ReviewFormPageState extends State<ReviewFormPage> {
         
       )
       
-      );
+      ),
+          ),
+        ),
+        )
+        );
     }
 }
 

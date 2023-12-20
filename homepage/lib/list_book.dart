@@ -70,6 +70,7 @@ class _ProductPageState extends State<Homepage> {
     );
 
     var data = jsonDecode(utf8.decode(response.bodyBytes));
+
     List<Book> listBook = [];
     for (var d in data) {
       if (d != null) {
