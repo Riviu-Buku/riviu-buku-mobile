@@ -30,7 +30,7 @@ class _MyBookPageState extends State<MyBookPage> {
 Future<List<Book>> fetchProduct() async {
     // TODO: Ganti URL dan jangan lupa tambahkan trailing slash (/) di akhir URL!
     var url = Uri.parse(
-        'http://127.0.0.1:8000/json/');
+        'https://riviu-buku-d07-tk.pbp.cs.ui.ac.id/json/');
     var response = await http.get(
         url,
         headers: {"Content-Type": "application/json"},
@@ -83,6 +83,7 @@ Widget build(BuildContext context) {
       title: const Text('My Books'),
     ),
     drawer: LeftDrawer(user: widget.user),
+    
     body: FutureBuilder(
       future: fetchProduct(),
       builder: (context, AsyncSnapshot snapshot) {
@@ -101,7 +102,7 @@ Widget build(BuildContext context) {
             child: ListView(
               children: [
                 // Widget for displaying top 5 books
-                TopBooksWidget(list_top.sublist(0, 5)),
+                TopBooksWidget(list_top.sublist(0, 5), user),
 
                 // Widget for displaying user's books
                 ListView.builder(
@@ -134,8 +135,8 @@ Widget build(BuildContext context) {
 }
 class TopBooksWidget extends StatelessWidget {
   final List<Book> topBooks;
-
-  TopBooksWidget(this.topBooks);
+  final User user;
+  TopBooksWidget(this.topBooks, this.user);
 
   @override
   Widget build(BuildContext context) {
@@ -159,7 +160,7 @@ class TopBooksWidget extends StatelessWidget {
                 final book = topBooks[index];
                 return Container(
                   margin: const EdgeInsets.only(right: 10), // Adjust the right margin as needed
-                  child: BuyBookWrappper(book: book),
+                  child: BuyBookWrappper(book: book, user: user),
                 );
               },
             ),

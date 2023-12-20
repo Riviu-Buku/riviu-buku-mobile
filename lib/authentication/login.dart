@@ -3,13 +3,11 @@ import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riviu_buku/authentication/menu.dart';
 import 'package:flutter/material.dart';
-import 'package:pbp_django_auth/pbp_django_auth.dart';
-import 'package:provider/provider.dart';
-import 'package:riviu_buku/left_drawer.dart';
 import 'package:http/http.dart' as http;
 import 'package:riviu_buku/models/user.dart';
 import 'package:riviu_buku/provider/user_provider.dart';
 import 'package:riviu_buku/components/background.dart';
+import 'package:riviu_buku/authentication/signup.dart';
 
 void main() {
     runApp(const LoginApp());
@@ -43,11 +41,20 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     final TextEditingController _passwordController = TextEditingController();
 
     Future<User?> loginBangIsa(String username, String password) async {
-        var res = await http.post(Uri.parse('http://127.0.0.1:8000/auth/login-flutter/'), body: jsonEncode({
+        var res = await http.post(Uri.parse(
+          // 'http://127.0.0.1:8000/auth/login-flutter/'
+          'https://riviu-buku-d07-tk.pbp.cs.ui.ac.id/auth/login-flutter/'
+          ), body: jsonEncode({
             'username': username,
             'password': password,
         }));
         final responseData = jsonDecode(res.body);
+        if(responseData["status"] == false){
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(
+                SnackBar(content: Text(responseData['message'])));
+        }
         final  userData = responseData['user'];
         User user = User.fromMap(userData);
         ref.read(userProvider.notifier).setUser(user);
@@ -69,8 +76,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               child: Text(
                 "LOGIN",
                 style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Color.fromRGBO(147,129,255,1.000),
+                  fontWeight: FontWeight.w900,
+                  color: Color.fromRGBO(108, 94, 187, 1),
                   fontSize: 36
                 ),
                 textAlign: TextAlign.left,
@@ -104,17 +111,17 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               ),
             ),
 
-            Container(
-              alignment: Alignment.centerRight,
-              margin: EdgeInsets.symmetric(horizontal: 40, vertical: 10),
-              child: Text(
-                "Forgot your password?",
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Color.fromRGBO(147,129,255,1.000)
-                ),
-              ),
-            ),
+            // Container(
+            //   alignment: Alignment.centerRight,
+            //   margin: EdgeInsets.symmetric(horizontal: 40, vertical: 10),
+            //   child: Text(
+            //     "Forgot your password?",
+            //     style: TextStyle(
+            //       fontSize: 12,
+            //       color: Color.fromRGBO(147,129,255,1.000)
+            //     ),
+            //   ),
+            // ),
 
             SizedBox(height: size.height * 0.05),
 
@@ -134,7 +141,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                     ScaffoldMessenger.of(context)
                                         ..hideCurrentSnackBar()
                                         ..showSnackBar(
-                                            SnackBar(content: Text("Mantap Selamat datang, ${user.name}.")));
+                                            SnackBar(content: Text("Selamat datang, ${user.name}.")));
                                 }
                                 else {
                                     showDialog(
@@ -142,7 +149,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                         builder: (context) => AlertDialog(
                                             title: const Text('Login Gagal'),
                                             content:
-                                                Text('username atau password salah'),
+                                                Text('Username atau password salah'),
                                             actions: [
                                                 TextButton(
                                                     child: const Text('OK'),
@@ -165,7 +172,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               margin: EdgeInsets.symmetric(horizontal: 40, vertical: 10),
               child: GestureDetector(
                 onTap: () => {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()))
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => SignUpPage()))
                 },
                 child: Text(
                   "Don't Have an Account? Sign up",

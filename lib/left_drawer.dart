@@ -1,14 +1,10 @@
 // ignore_for_file: prefer_const_constructors_in_immutables
 
 import 'package:flutter/material.dart';
+import 'package:profile/screens/profilepage.dart';
 import 'package:riviu_buku/authentication/menu.dart';
-// import 'package:shopping_list/screens/shoplist_form.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 import 'package:homepage/list_book.dart';
-import 'package:riviu_buku/models/book.dart';
 import 'package:riviu_buku/models/user.dart';
-import 'package:riviu_buku/provider/user_provider.dart';
 import 'package:mybooks/mybooks.dart';
 
 class LeftDrawer extends StatelessWidget {
@@ -22,27 +18,26 @@ class LeftDrawer extends StatelessWidget {
         children: [
           const DrawerHeader(
               decoration: BoxDecoration(
-                color: Colors.indigo,
+                color: Color.fromRGBO(255,238,221,1.000),
               ),
               child: Column(
                 children: [
                   Text(
-                    'Shopping List',
+                    'Riviu Buku',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 30,
                       fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                      color: Colors.black,
                     ),
                   ),
                   Padding(padding: EdgeInsets.all(10)),
-                  Text("Catat seluruh keperluan belanjamu di sini!",
-                    // NOTE: Tambahkan gaya teks dengan center alignment, font ukuran 15, warna putih, dan weight biasa
+                  Text("Explore Riviu Buku",
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 15,
-                      color: Colors.white,
-                      fontWeight: FontWeight.normal, // This is the default weight, so you can omit it if you prefer.
+                      color: Colors.black,
+                      fontWeight: FontWeight.normal,
                     ),
                   ),
                 ],
@@ -62,22 +57,6 @@ class LeftDrawer extends StatelessWidget {
                   ));
             },
           ),
-          // ListTile(
-          //   leading: const Icon(Icons.add_shopping_cart),
-          //   title: const Text('Tambah Produk'),
-          //   // Bagian redirection ke ShopFormPage
-          //   onTap: () {
-          //     /*
-          //     NOTE: Buatlah routing ke ShopFormPage di sini,
-          //     setelah halaman ShopFormPage sudah dibuat.
-          //     */
-          //     Navigator.pushReplacement(
-          //         context,
-          //         MaterialPageRoute(
-          //           builder: (context) => ShopFormPage(),
-          //         ));
-          //   },
-          // ),
           ListTile(
             leading: const Icon(Icons.book),
             title: const Text('Daftar Buku'),
@@ -98,7 +77,19 @@ class LeftDrawer extends StatelessWidget {
                 Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => Homepage(user: user)),
+                  builder: (context) => MyBookPage(user: user)),
+                );
+              },
+          ),
+          ListTile(
+            leading: const Icon(Icons.account_circle),
+            title: const Text('Profile'),
+            onTap: () {
+                // Route menu ke halaman produk
+                Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ProfilePage(user: user)),
                 );
               },
           ),
