@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
@@ -7,6 +8,10 @@ import 'package:http/http.dart' as http;
 import 'package:riviu_buku/left_drawer.dart';
 import 'package:riviu_buku/models/user.dart';
 import 'mybooks.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:convert';
+import 'dart:io' show File, kIsWeb;
+
 class ShopFormPage extends StatefulWidget {
     final User user;
     const ShopFormPage({Key? key, required this.user}) : super(key: key);
@@ -22,8 +27,44 @@ class _ShopFormPageState extends State<ShopFormPage> {
     String _name = "";
     String _penulis = "";
     String _description = "";
+    File? _image;
+    String _coverImgUrl = "https://res.cloudinary.com/dcf91ipuo/image/upload/v1702620170/defaultCoverImg_pvks08.jpg";
+    Uint8List webImage = Uint8List(8);
+     
+    Future<void> _pickImage() async {
+      if(!kIsWeb){
+        final ImagePicker _picker = ImagePicker();
+        XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+        if(image != null){
+          var selected = File(image.path);
+          setState(() {
+            _image = selected;
+          });
+        }else{
+          print("No Image Selected");
+        }
+      }else if(kIsWeb){
+        final ImagePicker _picker = ImagePicker();
+        XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+        if(image != null){
+          var f = await image.readAsBytes();
+          setState(() {
+            webImage = f;
+            _image = File('a');
+          });
+        }else{
+          print("No Image Selected");
+        }
+      }
+  
+    }
+
+
+   
+  
     @override
     Widget build(BuildContext context) {
+      User user = widget.user;
       
         return Scaffold(
   appBar: AppBar(
@@ -85,10 +126,7 @@ class _ShopFormPageState extends State<ShopFormPage> {
     },
     validator: (String? value) {
       if (value == null || value.isEmpty) {
-        return "Harga tidak boleh kosong!";
-      }
-      if (int.tryParse(value) == null) {
-        return "Harga harus berupa angka!";
+        return "Nama penulis tidak boleh kosong!";
       }
       return null;
     },
@@ -113,10 +151,27 @@ Padding(
     },
     validator: (String? value) {
       if (value == null || value.isEmpty) {
-        return "Deskripsi tidak boleh kosong!";
+        return "Kasih deskripsi singkat lah boss!";
       }
       return null;
     },
+  ),
+),
+Padding(
+  padding: const EdgeInsets.all(8.0),
+  child: ElevatedButton(
+    onPressed: kIsWeb ? null : _pickImage,
+    child: Text("Pick Image"),
+    style: ButtonStyle(
+      backgroundColor: kIsWeb
+          ? MaterialStateProperty.all(Colors.grey) // Set a disabled color
+          : MaterialStateProperty.all(
+              Color.fromARGB(255, 177, 132, 255), // Set your active color
+            ),
+      foregroundColor: MaterialStateProperty.all(
+        kIsWeb ? Colors.black : Colors.white, // Set text color based on platform
+      ),
+    ),
   ),
 ),
 Align(
@@ -129,15 +184,25 @@ Align(
                 MaterialStateProperty.all(Color.fromARGB(255, 177, 132, 255)),
           ),
           onPressed: () async {
+            
     if (_formKey.currentState!.validate()) {
+      if(!kIsWeb && _image != null){
+         List<int> imageBytes = await _image!.readAsBytes();
+        _coverImgUrl = base64Encode(imageBytes);
+
+      }
+        
         // Kirim ke Django dan tunggu respons
         // TODO: Ganti URL dan jangan lupa tambahkan trailing slash (/) di akhir URL!
         final response = await http.post(
-        Uri.parse('http://127.0.0.1:8000/upload_buku/upload-flutter/'),
+        Uri.parse('http://127.0.0.1:8000/upload/create-flutter/'),
         body: jsonEncode(<String, String>{
-            'movie_name': _name,
+            'title': _name,
             'rating': _penulis,
             'description': _description,
+            'coverImg': _coverImgUrl,
+            'user': user.username,
+
             // TODO: Sesuaikan field data sesuai dengan aplikasimu
         }));
         final responseData = jsonDecode(response.body);
