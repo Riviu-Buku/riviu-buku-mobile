@@ -37,10 +37,11 @@ class Background extends StatelessWidget {
           Positioned(
             top: 50,
             right: 30,
-            child: Image.network(
-              "https://res.cloudinary.com/dcf91ipuo/image/upload/v1702367781/logoRiviuBuku_wypvmq.png",
-              width: size.width * 0.25
-            ),
+            child: Image.asset('assets/images/logo-riviu-buku.png', width: size.width * 0.25)
+            // child: Image.network(
+            //   "https://res.cloudinary.com/dcf91ipuo/image/upload/v1702367781/logoRiviuBuku_wypvmq.png",
+            //   width: size.width * 0.25
+            // ),
           ),
           Positioned(
             bottom: 0,

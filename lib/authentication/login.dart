@@ -3,9 +3,6 @@ import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riviu_buku/authentication/menu.dart';
 import 'package:flutter/material.dart';
-import 'package:pbp_django_auth/pbp_django_auth.dart';
-import 'package:provider/provider.dart';
-import 'package:riviu_buku/left_drawer.dart';
 import 'package:http/http.dart' as http;
 import 'package:riviu_buku/models/user.dart';
 import 'package:riviu_buku/provider/user_provider.dart';
@@ -79,8 +76,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               child: Text(
                 "LOGIN",
                 style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Color.fromRGBO(147,129,255,1.000),
+                  fontWeight: FontWeight.w900,
+                  color: Color.fromRGBO(108, 94, 187, 1),
                   fontSize: 36
                 ),
                 textAlign: TextAlign.left,

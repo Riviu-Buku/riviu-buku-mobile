@@ -5,27 +5,20 @@ import 'package:riviu_buku/models/user.dart';
 import 'package:album/albumspage.dart';
 import 'package:mybooks/mybooks.dart';
 import 'package:riviu_buku/left_drawer.dart';
-import 'package:riviu_buku/models/user.dart';
 import 'package:riviu_buku/authentication/login.dart';
-
-import 'package:riviu_buku/provider/user_provider.dart';
-import 'package:provider/provider.dart';
-import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-// ignore_for_file: library_private_types_in_public_api, use_build_context_synchronously
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class MyHomePage extends StatelessWidget {
   final User user;
   MyHomePage(this.user);
 
   final List<ShopItem> items = [
-    ShopItem("Daftar Buku", Icons.checklist),
-    ShopItem("Buku Saya", Icons.person),
-    ShopItem("Logout", Icons.logout),
-    ShopItem("Albums", Icons.collections_bookmark),
-    ShopItem("Profile", Icons.account_circle)
+    ShopItem("Daftar Buku", Icons.checklist, Color.fromARGB(137, 160, 73, 214)),
+    ShopItem("Buku Saya", Icons.person, Color.fromARGB(255, 201, 123, 226)),
+    ShopItem("Logout", Icons.logout, Color.fromARGB(255, 224, 97, 97)),
+    ShopItem("Albums", Icons.collections_bookmark, const Color.fromARGB(255, 112, 165, 208)),
+    ShopItem("Profile", Icons.account_circle, Color.fromARGB(255, 255, 195, 98)),
   ];
 
   void _navigateToPage(String itemName, BuildContext context) {
@@ -122,9 +115,7 @@ class MyHomePage extends StatelessWidget {
       appBar: AppBar(
         title: Row(
           children: [
-            Text(
-              'Riviu Buku',
-            ),
+            Text('Riviu Buku'),
             SizedBox(width: 16),
           ],
         ),
@@ -132,38 +123,58 @@ class MyHomePage extends StatelessWidget {
         foregroundColor: Colors.white,
       ),
       drawer: LeftDrawer(user: user),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Column(
-            children: <Widget>[
-              const Padding(
-                padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
-                child: Text(
-                  'Welcome to Riviu Buku!',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
+      body: Container(
+        height: MediaQuery.of(context).size.height,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Color.fromARGB(255, 191, 156, 239),
+              Color.fromARGB(255, 216, 191, 247),
+              Color.fromARGB(255, 255, 223, 182),
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
+              children: <Widget>[
+                const Padding(
+                  padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
+                  child: Text(
+                    'Welcome to Riviu Buku!',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      shadows: <Shadow> [Shadow(
+                          // offset: Offset(10.0, 10.0),
+                          blurRadius: 8.0,
+                          color: Color.fromARGB(255, 212, 194, 219),
+                      ),]
+                    ),
                   ),
                 ),
-              ),
-              GridView.count(
-                primary: true,
-                padding: const EdgeInsets.all(20),
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10,
-                crossAxisCount: 3,
-                shrinkWrap: true,
-                children: [
-                  ...items.map((ShopItem item) {
-                    return ShopCard(item, onTap: () {
-                      _navigateToPage(item.name, context);
-                    });
-                  }),
-                ],
-              ),
-            ],
+                GridView.count(
+                  primary: true,
+                  padding: const EdgeInsets.all(20),
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 10,
+                  crossAxisCount: 3,
+                  shrinkWrap: true,
+                  children: [
+                    ...items.map((ShopItem item) {
+                      return ShopCard(item, onTap: () {
+                        _navigateToPage(item.name, context);
+                      });
+                    }),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -174,8 +185,9 @@ class MyHomePage extends StatelessWidget {
 class ShopItem {
   final String name;
   final IconData icon;
+  final Color iconColor;
 
-  ShopItem(this.name, this.icon);
+  ShopItem(this.name, this.icon, this.iconColor);
 }
 
 class ShopCard extends StatelessWidget {
@@ -186,28 +198,33 @@ class ShopCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: Color.fromRGBO(147, 129, 255, 1.000),
-      child: InkWell(
-        onTap: onTap,
-        child: Container(
-          padding: const EdgeInsets.all(8),
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  item.icon,
-                  color: Colors.white,
-                  size: 30.0,
-                ),
-                const Padding(padding: EdgeInsets.all(3)),
-                Text(
-                  item.name,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(color: Colors.white),
-                ),
-              ],
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(10.0),
+      child: Material(
+        color: Colors.white.withOpacity(0.8),
+        elevation: 2, 
+        shadowColor: Colors.black.withOpacity(0.3), 
+        child: InkWell(
+          onTap: onTap,
+          child: Container(
+            padding: const EdgeInsets.all(8),
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    item.icon,
+                    color: item.iconColor,
+                    size: 30.0,
+                  ),
+                  const Padding(padding: EdgeInsets.all(3)),
+                  Text(
+                    item.name,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(color: Color.fromARGB(255, 107, 66, 117)),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
