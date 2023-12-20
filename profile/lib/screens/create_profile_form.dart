@@ -64,7 +64,7 @@ class _CompleteProfileFormPageState extends State<CompleteProfileFormPage> {
               end: Alignment.bottomRight,
             ),
         ),
-        color: Color.fromRGBO(184, 184, 255, 1.0),
+        // color: Color.fromRGBO(184, 184, 255, 1.0),
         child: Center(
           child: Card(
             color: Colors.white.withOpacity(1), 
@@ -341,7 +341,7 @@ class _CompleteProfileFormPageState extends State<CompleteProfileFormPage> {
                       if (_formKey.currentState!.validate()) {
                         final response = await http.post(
                             Uri.parse(
-                                'https://riviu-buku-d07-tk.pbp.cs.ui.ac.id/profile/complete-profile-flutter/'),
+                                'https://riviu-buku-d07-tk.pbp.cs.ui.ac.id/profile/complete-profile-flutter/${widget.user.id}/'),
                             body: jsonEncode(<String, String>{
                               'username': widget.user.username,
                               'name': _name,
