@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:homepage/recommend_form.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:riviu_buku/models/book.dart';
 import 'package:review/reviewpage.dart';
 import 'package:riviu_buku/left_drawer.dart';
+import 'package:riviu_buku/models/recommended_book.dart';
 import 'package:riviu_buku/models/user.dart';
 import 'package:riviu_buku/provider/user_provider.dart';
 
@@ -19,19 +21,45 @@ class Homepage extends StatefulWidget {
 class _ProductPageState extends State<Homepage> {
   late List<Book> _allBooks;
   late List<Book> _filteredBooks;
+  late List<RecommendedBook> _recommendedBooks;
   TextEditingController _searchController = TextEditingController();
+
+  String latestRecommendedBookTitle = "";
+  String latestRecommendedBookAuthor = "";
 
   @override
   void initState() {
     super.initState();
     _filteredBooks = [];
     _allBooks = [];
+    _recommendedBooks = [];
     fetchBook().then((books) {
       setState(() {
         _allBooks = books;
         _filteredBooks = books;
       });
     });
+    fetchLatestRecommendedBook().then((recommendedBooks) {
+      setState(() {
+        _recommendedBooks = recommendedBooks;
+      });
+    });
+  }
+
+  Future<List<RecommendedBook>> fetchLatestRecommendedBook() async {
+    var response = await http.get(
+        Uri.parse('https://riviu-buku-d07-tk.pbp.cs.ui.ac.id/show_recommended_book_json/'),
+        headers: {"Content-Type": "application/json"},
+      );
+
+    var data = jsonDecode(utf8.decode(response.bodyBytes));
+    List<RecommendedBook> listRecommendedBook = [];
+    for (var d in data) {
+      if (d != null) {
+        listRecommendedBook.add(RecommendedBook.fromJson(d));
+      }
+    }
+    return listRecommendedBook; 
   }
 
   Future<List<Book>> fetchBook() async {
@@ -105,6 +133,7 @@ class _ProductPageState extends State<Homepage> {
               ),
             ),
           ),
+
           Expanded(
             child: _filteredBooks.isEmpty
                 ? Center(
@@ -120,9 +149,7 @@ class _ProductPageState extends State<Homepage> {
                     ),
                     itemCount: _filteredBooks.length,
                     itemBuilder: (_, index) => GestureDetector(
-                      onTap: () {
-                        // ... (your existing code)
-                      },
+                      
                       child: Card(
                         elevation: 5,
                         child: Column(
@@ -149,6 +176,48 @@ class _ProductPageState extends State<Homepage> {
                       ),
                     ),
                   ),
+          ),
+          SizedBox(height: 16.0),
+          // Menampilkan buku terakhir yang direkomendasikan
+          _recommendedBooks.isNotEmpty
+              ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    const Text(
+                      'Rekomendasi Buku',
+                      style: TextStyle(
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    Text(
+                      '${_recommendedBooks.last.fields.title} oleh ${_recommendedBooks.last.fields.author}',
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 16.0),
+                  ],
+                )
+              : const SizedBox.shrink(),
+
+          ElevatedButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => RecommendedBookForm(user : user),
+                ),
+              ).then((result) {
+                // When RecommendedBookForm is popped, refresh the latest recommended book
+                if (result == true) {
+                  fetchLatestRecommendedBook();
+                }
+              });
+            },
+            child: Text('Rekomendasikan Buku'),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 16.0),
           ),
         ],
       ),
