@@ -31,7 +31,7 @@ class _ReviewPageState extends State<ReviewPage> {
     // TODO: Ganti URL dan jangan lupa tambahkan trailing slash (/) di akhir URL!
 
     var url = Uri.parse(
-        'http://127.0.0.1:8000/book-detail/get-review/${widget.book.pk}'
+        'https://riviu-buku-d07-tk.pbp.cs.ui.ac.id/book-detail/get-review/${widget.book.pk}'
         // TODO:
         // 'https://riviu-buku-d07-tk.pbp.cs.ui.ac.id/json/'
         );
@@ -56,7 +56,8 @@ class _ReviewPageState extends State<ReviewPage> {
   Future<bool> fetchLikeStatus() async {
     isLiked = false;
     final response = await http.post(
-      Uri.parse('http://127.0.0.1:8000/book-detail/get-liked-user-flutter/'),
+      // Uri.parse('http://127.0.0.1:8000/book-detail/get-liked-user-flutter/'),
+      Uri.parse('https://riviu-buku-d07-tk.pbp.cs.ui.ac.id/book-detail/get-liked-user-flutter/'),
       body: jsonEncode(<String, String>{
         'bookId': widget.book.pk.toString(),
         'user': widget.user.username,
@@ -83,7 +84,8 @@ class _ReviewPageState extends State<ReviewPage> {
     // ... your code to update like status on the server ...
     if (likeStatus) {
       final response = await http.post(
-        Uri.parse('http://127.0.0.1:8000/book-detail/add-like-flutter/'),
+        // Uri.parse('http://127.0.0.1:8000/book-detail/add-like-flutter/'),
+        Uri.parse('https://riviu-buku-d07-tk.pbp.cs.ui.ac.id/book-detail/add-like-flutter/'),
         body: jsonEncode(<String, String>{
           'bookId': widget.book.pk.toString(),
           'user': widget.user.username,
@@ -91,7 +93,8 @@ class _ReviewPageState extends State<ReviewPage> {
       );
     } else {
       final response = await http.post(
-        Uri.parse('http://127.0.0.1:8000/book-detail/add-unlike-flutter/'),
+        // Uri.parse('http://127.0.0.1:8000/book-detail/add-unlike-flutter/'),
+        Uri.parse('https://riviu-buku-d07-tk.pbp.cs.ui.ac.id/book-detail/add-unlike-flutter/'),
         body: jsonEncode(<String, String>{
           'bookId': widget.book.pk.toString(),
           'user': widget.user.username,
@@ -103,7 +106,8 @@ class _ReviewPageState extends State<ReviewPage> {
   Future<void> deleteReview(int reviewID) async {
     // ... your code to update like status on the server ...    
     final response = await http.post(
-      Uri.parse('http://127.0.0.1:8000/book-detail/delete-review-flutter/'),
+      // Uri.parse('http://127.0.0.1:8000/book-detail/delete-review-flutter/'),
+      Uri.parse('https://riviu-buku-d07-tk.pbp.cs.ui.ac.id/book-detail/delete-review-flutter/'),
       body: jsonEncode(<String, String>{
         'reviewID': reviewID.toString(),
       }),
@@ -337,7 +341,8 @@ class _ReviewPageState extends State<ReviewPage> {
                                                 builder: (context) => OtherProfilePage(
                                                     user: snapshot
                                                         .data[index].fields?.name,
-                                                    authUser: widget.user),
+                                                    authUser: widget.user,
+                                                     ),
                                               ),
                                             );
                                           }

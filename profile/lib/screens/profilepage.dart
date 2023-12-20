@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:riviu_buku/models/user.dart';
 import 'package:riviu_buku/models/book.dart';
-import 'package:review/reviewpage.dart';
 import 'package:homepage/list_book.dart';
+import 'package:review/reviewpage.dart';
 import 'package:profile/screens/create_profile_form.dart';
 import 'package:profile/screens/update_profile_form.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+//ignore: must_be_immutable
 class ProfilePage extends StatefulWidget {
-  final User user;
+  User user;
   ProfilePage({required this.user});
 
   @override
@@ -18,8 +19,9 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   late Future<List<Book>> _likedBooks;
-  late Future<Map<String, String>> _user;
   late Map<String, String> userMap;
+  late User userNow;
+  late Future<List<User>> _user;
 
   @override
   void initState() {
@@ -28,25 +30,18 @@ class _ProfilePageState extends State<ProfilePage> {
     _user = fetchProfileUser();
   }
 
-  Future<Map<String, String>> fetchProfileUser() async {
-    final response = await http.post(
-      Uri.parse('http://127.0.0.1:8000/profile/get-profile-user/'),
-      body: jsonEncode(<String, String>{
-        'user': widget.user.username,
-      }),
+  Future<List<User>> fetchProfileUser() async {
+    var url = Uri.parse(
+        'https://riviu-buku-d07-tk.pbp.cs.ui.ac.id/profile/get-profile-user/${widget.user.id}');
+    var response = await http.get(
+      url,
       headers: {"Content-Type": "application/json"},
     );
     if (response.statusCode == 200) {
-      final responseData = jsonDecode(response.body);
-      userMap = {
-        "name": responseData["name"],
-        "avatar": responseData["avatar"],
-        "email": responseData["email"],
-        "bio": responseData["bio"],
-        "handphone": responseData["handphone"],
-        "address": responseData["address"]
-      };
-      return userMap;
+      final responseData2 = jsonDecode(utf8.decode(response.bodyBytes));
+      List<User> list_user = [];
+      list_user.add(User.fromJson(responseData2));
+      return list_user;
     } else {
       throw Exception('Failed to load profile data');
     }
@@ -55,7 +50,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Future<List<Book>> fetchLikedBooks() async {
     final response = await http.post(
       Uri.parse(
-          'http://127.0.0.1:8000/profile/get-books-liked-by-user-flutter/'),
+          'https://riviu-buku-d07-tk.pbp.cs.ui.ac.id/profile/get-books-liked-by-user-flutter/'),
       body: jsonEncode(<String, String>{
         'user': widget.user.username,
       }),
@@ -116,10 +111,8 @@ class _ProfilePageState extends State<ProfilePage> {
                   } else if (snapshot.hasError) {
                     return Text('Error: ${snapshot.error}');
                   } else {
-                    Map<String, String> profileUser =
-                        snapshot.data as Map<String, String>;
 
-                    Widget avatarWidget = profileUser["avatar"] != null
+                    Widget avatarWidget = snapshot.data![0].avatar != ""
                         ? Container(
                             width: 100.0,
                             height: 100.0,
@@ -138,7 +131,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             ),
                             child: ClipOval(
                               child: Image.asset(
-                                'assets/images/${profileUser["avatar"]}',
+                                'assets/images/${snapshot.data![0].avatar}',
                                 fit: BoxFit.cover,
                               ),
                             ),
@@ -167,6 +160,11 @@ class _ProfilePageState extends State<ProfilePage> {
                             ),
                           );
 
+                    // return Column(
+                    //   children: [
+                    //     avatarWidget,
+                    //   ],
+                    // );
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
@@ -177,9 +175,9 @@ class _ProfilePageState extends State<ProfilePage> {
                         SizedBox(height: 8.0),
                         avatarWidget,
                         SizedBox(height: 12.0),
-                        if (profileUser["name"] != null)
+                        if (snapshot.data![0].name != "")
                           Text(
-                            '${profileUser["name"]}',
+                            '${snapshot.data![0].name}',
                             style: TextStyle(
                                 fontSize: 25, fontWeight: FontWeight.bold),
                           ),
@@ -188,14 +186,14 @@ class _ProfilePageState extends State<ProfilePage> {
                           style: TextStyle(
                               fontSize: 12, fontWeight: FontWeight.w500),
                         ),
-                        if (profileUser["bio"] != null)
+                        if (snapshot.data![0].bio != "")
                           Text(
-                            '"${profileUser["bio"]}"',
+                            '"${snapshot.data![0].bio}"',
                             style: TextStyle(
                               fontStyle: FontStyle.italic,
                             ),
                           ),
-                        if (profileUser["email"] != null)
+                        if (snapshot.data![0].email != "")
                           Center(
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -206,11 +204,11 @@ class _ProfilePageState extends State<ProfilePage> {
                                   height: 15.0,
                                 ),
                                 SizedBox(width: 8.0),
-                                Text('${profileUser["email"]}'),
+                                Text('${snapshot.data![0].email}'),
                               ],
                             ),
                           ),
-                        if (profileUser["handphone"] != null)
+                        if (snapshot.data![0].handphone != "")
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -220,10 +218,10 @@ class _ProfilePageState extends State<ProfilePage> {
                                 height: 15.0,
                               ),
                               SizedBox(width: 8.0),
-                              Text('${profileUser["handphone"]}'),
+                              Text('${snapshot.data![0].handphone}'),
                             ],
                           ),
-                        if (profileUser["address"] != null)
+                        if (snapshot.data![0].address != "")
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -233,15 +231,15 @@ class _ProfilePageState extends State<ProfilePage> {
                                 height: 15.0,
                               ),
                               SizedBox(width: 8.0),
-                              Text('${profileUser["address"]}'),
+                              Text('${snapshot.data![0].address}'),
                             ],
                           ),
                         SizedBox(height: 16),
-                        if (profileUser["email"] == null)
+                        if (snapshot.data![0].email == "")
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(
                               backgroundColor:
-                                  Color.fromRGBO(255,216,190,1.000),
+                                  Color.fromRGBO(255, 216, 190, 1.000),
                               foregroundColor: Colors.black,
                             ),
                             onPressed: () {
@@ -249,7 +247,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => CompleteProfileFormPage(
-                                      user: widget.user),
+                                      user: snapshot.data![0]),
                                 ),
                               );
                             },
@@ -258,8 +256,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         else
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              backgroundColor:
-                                  Color.fromRGBO(254, 231, 192, 1),
+                              backgroundColor: Color.fromRGBO(254, 231, 192, 1),
                               foregroundColor: Colors.black,
                             ),
                             onPressed: () {
@@ -267,13 +264,24 @@ class _ProfilePageState extends State<ProfilePage> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => EditProfileFormPage(
-                                      user: widget.user, 
-                                      email: profileUser['email'].toString(), 
-                                      handphone: profileUser['handphone'].toString(),
-                                      bio: profileUser['bio'].toString(),
-                                      address: profileUser['address'].toString(),
-                                      name: profileUser['name'].toString(),
-                                      avatar: profileUser['avatar'].toString()),
+                                    user: widget.user,
+                                    // email: profileUser['email'].toString(),
+                                    // handphone:
+                                    //     profileUser['handphone'].toString(),
+                                    // bio: profileUser['bio'].toString(),
+                                    // address:
+                                    //     profileUser['address'].toString(),
+                                    // name: profileUser['name'].toString(),
+                                    // avatar: profileUser['avatar'].toString()
+                                    email: snapshot.data![0].email.toString(),
+                                    handphone:
+                                        snapshot.data![0].handphone.toString(),
+                                    bio: snapshot.data![0].bio.toString(),
+                                    address:
+                                        snapshot.data![0].address.toString(),
+                                    name: snapshot.data![0].name.toString(),
+                                    avatar: snapshot.data![0].avatar.toString(),
+                                  ),
                                 ),
                               );
                             },
@@ -333,10 +341,8 @@ class _ProfilePageState extends State<ProfilePage> {
                       );
                     } else {
                       return Container(
-                        width: MediaQuery.of(context)
-                            .size
-                            .width, 
-                        height: 200, 
+                        width: MediaQuery.of(context).size.width,
+                        height: 200,
                         child: ListView.builder(
                           scrollDirection: Axis.horizontal,
                           itemCount: likedBooks.length,
@@ -368,16 +374,18 @@ class _ProfilePageState extends State<ProfilePage> {
                                       ),
                                       gradient: LinearGradient(
                                         colors: [
-                                        Color.fromARGB(255, 255, 237, 220),
-                                        Color.fromARGB(255, 243, 241, 252),
-                                        Color.fromARGB(255, 229, 218, 255),
+                                          Color.fromARGB(255, 255, 237, 220),
+                                          Color.fromARGB(255, 243, 241, 252),
+                                          Color.fromARGB(255, 229, 218, 255),
                                         ],
                                         begin: Alignment.topLeft,
                                         end: Alignment.bottomRight,
                                       ),
                                       boxShadow: [
                                         BoxShadow(
-                                          color: Colors.grey.withOpacity(0.5),
+                                          color:
+                                              Color.fromARGB(255, 189, 161, 220)
+                                                  .withOpacity(0.4),
                                           spreadRadius: 2,
                                           blurRadius: 8,
                                         ),

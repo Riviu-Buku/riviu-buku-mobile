@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:riviu_buku/models/album.dart';
 import 'package:riviu_buku/models/book.dart';
+import 'package:riviu_buku/models/user.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:review/reviewpage.dart';
+import 'package:album/editalbum.dart';
 
 class AlbumDetailsPage extends StatefulWidget {
   final Album album;
-
-  AlbumDetailsPage({Key? key, required this.album}) : super(key: key);
+  final User user;
+  AlbumDetailsPage({Key? key, required this.user, required this.album}) : super(key: key);
 
   @override
   _AlbumDetailsPageState createState() => _AlbumDetailsPageState();
@@ -32,13 +35,32 @@ class _AlbumDetailsPageState extends State<AlbumDetailsPage> {
     return list_book;
   }
 
-
+  bool canEditAlbum() {
+    // Check if the current user is the one who made the album
+    print(widget.album.fields.user + widget.user.id);
+    return widget.album.fields.user == widget.user.id;
+  }
 
   @override
   Widget build(BuildContext context) {
+    User user = widget.user;
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.album.fields.name),
+        actions: [
+          if (canEditAlbum())
+            IconButton(
+              icon: Icon(Icons.edit),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => EditAlbumPage(user: widget.user, album: widget.album),
+                  ),
+                );
+              },
+            ),
+        ],
       ),
       body: FutureBuilder(
         future: fetchBooksForAlbum(widget.album),
@@ -66,9 +88,16 @@ class _AlbumDetailsPageState extends State<AlbumDetailsPage> {
                       ),
                       itemBuilder: (BuildContext context, int index) {
                         return GestureDetector(
-                          onTap: () {
-                            // TODO: Implement your functionality here
-                            print('Book clicked');
+                          onTap: () {Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context){
+                                  return ReviewPage(
+                                    book: snapshot.data![index], user: user,
+                                  );
+                                }
+                            ),
+                          );
                           },
                           child: Card(
                             child: Column(

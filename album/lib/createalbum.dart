@@ -3,34 +3,44 @@ import 'package:riviu_buku/models/album.dart' as album;
 import 'package:riviu_buku/models/book.dart' as book;
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:riviu_buku/models/user.dart';
+import 'package:album/albumspage.dart';
+import 'package:review/reviewpage.dart';
+
+import 'albumpage.dart';
 
 class CreateAlbumPage extends StatefulWidget {
+  final User user;
+  CreateAlbumPage({Key? key, required this.user}) : super(key: key);
   @override
   _CreateAlbumPageState createState() => _CreateAlbumPageState();
+
 }
 
 class _CreateAlbumPageState extends State<CreateAlbumPage> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _searchController = TextEditingController();
-  List<book.Book> _selectedBooks = [];
+  List<int> _selectedBooks = [];
+  Map<int, book.Book> _books = {};
 
   Future<List<book.Book>> fetchBooks() async {
-    var url = Uri.parse('http://127.0.0.1:8000/json/');
-    var response = await http.get(
-      url,
-      headers: {"Content-Type": "application/json"},
-    );
+    final response = await http.get(Uri.parse('http://127.0.0.1:8000/json/'));
 
-    var data = jsonDecode(utf8.decode(response.bodyBytes));
-
-    List<book.Book> list_book = [];
-    for (var d in data) {
-      if (d != null) {
-        list_book.add(book.Book.fromJson(d));
-      }
+    if (response.statusCode == 200) {
+      List<book.Book> books = book.bookFromJson(response.body);
+      return books.where((book) {
+        if (book.fields?.title == null) {
+          print('Title is null for book: ${book.pk}');
+        }
+        if (_searchController.text == null) {
+          print('Search query is null');
+        }
+        return book.fields?.title?.toLowerCase().contains(_searchController.text.toLowerCase() ?? '') ?? false;
+      }).toList();
+    } else {
+      throw Exception('Failed to load books');
     }
-    return list_book;
   }
 
   Widget buildSelectedBooks() {
@@ -42,22 +52,38 @@ class _CreateAlbumPageState extends State<CreateAlbumPage> {
         mainAxisSpacing: 4.0,
       ),
       itemBuilder: (BuildContext context, int index) {
-        book.Fields bookFields = _selectedBooks[index].fields!;
-        print(bookFields.toJson());
+        book.Book selectedBook = _books[_selectedBooks[index]]!;
+        book.Fields bookFields = selectedBook.fields!;
         return GestureDetector(
           onTap: () {
             // TODO: Implement onTap functionality if needed
           },
           child: Card(
-            child: Column(
+            child: Stack(
+              alignment: Alignment.topRight,
               children: <Widget>[
-                Expanded(
-                  child: Image.network(
-                    bookFields.coverImg ?? "",
-                    fit: BoxFit.cover,
+                Column(
+                  children: <Widget>[
+                    Expanded(
+                      child: Image.network(
+                        bookFields.coverImg ?? "",
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    Text((bookFields.title) ?? 'Default Title'),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: IconButton(
+                    icon: Icon(Icons.delete, color: Colors.red),
+                    onPressed: () {
+                      setState(() {
+                        _selectedBooks.removeAt(index);
+                      });
+                    },
                   ),
                 ),
-                Text((bookFields.title) ?? 'Default Title'),
               ],
             ),
           ),
@@ -66,12 +92,8 @@ class _CreateAlbumPageState extends State<CreateAlbumPage> {
     );
   }
 
-
-
-
-
-  Future<void> createAlbum() async {
-    var url = Uri.parse('http://127.0.0.1:8000/album/create-album'); // replace with your Django server URL
+  Future<album.Album> createAlbum() async {
+    var url = Uri.parse('http://127.0.0.1:8000/album/create-album-flutter/');
 
     var response = await http.post(
       url,
@@ -80,20 +102,29 @@ class _CreateAlbumPageState extends State<CreateAlbumPage> {
         'name': _nameController.text,
         'description': _descriptionController.text,
         'books': _selectedBooks,
+        'user': widget.user.username,
       }),
     );
 
-    if (response.statusCode == 200) {
-      // If the server returns a 200 OK response, then the album was created successfully.
+    if (response.statusCode == 201) {
+      // If the server returns a 201 Created response, the album was created successfully.
       print('Album created successfully');
+
+      // Parse the JSON response and return the Album object
+      Map<String, dynamic> jsonResponse = json.decode(response.body);
+      return album.Album.fromJson(jsonResponse['album']);
     } else {
-      // If the server returns an error response, then the album was not created.
-      print('Failed to create album');
+      // If the server returns an error response, print the error message and return null.
+      print('Failed to create album: ${response.statusCode}');
+      return album.Album(model: '', pk: 0, fields: album.Fields(name: '', slug: '', user: 0, description: '', coverImage: '', books: []));
     }
   }
 
+
+
   @override
   Widget build(BuildContext context) {
+    User user = widget.user;
     return Scaffold(
       appBar: AppBar(
         title: Text('Create a new album'),
@@ -128,7 +159,8 @@ class _CreateAlbumPageState extends State<CreateAlbumPage> {
                 hintText: 'Search for books',
               ),
               onChanged: (value) {
-                // TODO: Implement search functionality
+                // Call fetchBooks when the search query changes
+                setState(() {});
               },
             ),
             SizedBox(height: 16.0),
@@ -153,26 +185,42 @@ class _CreateAlbumPageState extends State<CreateAlbumPage> {
                             mainAxisSpacing: 4.0,
                           ),
                           itemBuilder: (BuildContext context, int index) {
-                            return GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  if (snapshot.data![index].pk != null) {
-                                    _selectedBooks.add(snapshot.data![index]);
-                                  }
-                                });
-                              },
-                              child: Card(
-                                child: Column(
-                                  children: <Widget>[
-                                    Expanded(
-                                      child: Image.network(
-                                        snapshot.data![index].fields?.coverImg ?? "",
-                                        fit: BoxFit.cover,
-                                      ),
+                            return Card(
+                              child: Column(
+                                children: <Widget>[
+                                  Expanded(
+                                    child: Image.network(
+                                      snapshot.data![index].fields?.coverImg ?? "",
+                                      fit: BoxFit.cover,
                                     ),
-                                    Text((snapshot.data![index].fields?.title) ?? 'Default Title'),
-                                  ],
-                                ),
+                                  ),
+                                  Text((snapshot.data![index].fields?.title) ?? 'Default Title'),
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        if (snapshot.data![index].pk != null) {
+                                          _selectedBooks.add(snapshot.data![index].pk!);
+                                          _books[snapshot.data![index].pk!] = snapshot.data![index];
+                                        }
+                                      });
+                                    },
+                                    child: Text('Add to Album'),
+                                  ),
+                                  ElevatedButton(
+                                    onPressed: () {Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                            builder: (context){
+                            return ReviewPage(
+                            book: snapshot.data![index], user: user,
+                            );
+                            }
+                            ),
+                            );
+                                      },
+                                    child: Text('View Book'),
+                                  ),
+                                ],
                               ),
                             );
                           },
@@ -190,8 +238,13 @@ class _CreateAlbumPageState extends State<CreateAlbumPage> {
               child: buildSelectedBooks(),
             ),
             ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
                 // TODO: Implement create album functionality
+                album.Album createdAlbum = await createAlbum();
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AlbumDetailsPage(album: createdAlbum, user: user)),
+                );
               },
               child: Text('Create'),
             ),
