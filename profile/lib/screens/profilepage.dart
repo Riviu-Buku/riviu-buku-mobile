@@ -247,7 +247,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => CompleteProfileFormPage(
-                                      user: snapshot.data![0]),
+                                      user: widget.user),
                                 ),
                               );
                             },
@@ -265,14 +265,6 @@ class _ProfilePageState extends State<ProfilePage> {
                                 MaterialPageRoute(
                                   builder: (context) => EditProfileFormPage(
                                     user: widget.user,
-                                    // email: profileUser['email'].toString(),
-                                    // handphone:
-                                    //     profileUser['handphone'].toString(),
-                                    // bio: profileUser['bio'].toString(),
-                                    // address:
-                                    //     profileUser['address'].toString(),
-                                    // name: profileUser['name'].toString(),
-                                    // avatar: profileUser['avatar'].toString()
                                     email: snapshot.data![0].email.toString(),
                                     handphone:
                                         snapshot.data![0].handphone.toString(),

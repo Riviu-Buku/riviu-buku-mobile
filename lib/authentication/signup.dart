@@ -77,8 +77,8 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
               child: Text(
                 "REGISTER",
                 style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Color.fromRGBO(147,129,255,1.000),
+                  fontWeight: FontWeight.w900,
+                  color: Color.fromRGBO(108, 94, 187, 1),
                   fontSize: 36
                 ),
                 textAlign: TextAlign.left,

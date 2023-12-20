@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:riviu_buku/models/book.dart';
 import 'package:riviu_buku/models/user.dart';
-import 'package:mybooks/mybooks.dart';
+import 'package:review/reviewpage.dart';
 class BookCard extends StatelessWidget {
   final Book book;
   final User user;
@@ -136,7 +136,7 @@ class BookCard extends StatelessWidget {
   void navigateDetailPage(BuildContext context, Book book) {
     final route = MaterialPageRoute(
       builder: (context) {
-        return MyBookPage(user: user);
+        return ReviewPage(book: book, user: user);
       },
     );
     Navigator.push(context, route);
