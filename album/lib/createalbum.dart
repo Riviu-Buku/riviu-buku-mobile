@@ -25,7 +25,7 @@ class _CreateAlbumPageState extends State<CreateAlbumPage> {
   Map<int, book.Book> _books = {};
 
   Future<List<book.Book>> fetchBooks() async {
-    final response = await http.get(Uri.parse('http://127.0.0.1:8000/json/'));
+    final response = await http.get(Uri.parse('https://riviu-buku-d07-tk.pbp.cs.ui.ac.id/json/'));
 
     if (response.statusCode == 200) {
       List<book.Book> books = book.bookFromJson(response.body);
@@ -60,7 +60,7 @@ class _CreateAlbumPageState extends State<CreateAlbumPage> {
           },
           child: Card(
             child: Stack(
-              alignment: Alignment.topRight,
+              alignment: Alignment.center,
               children: <Widget>[
                 Column(
                   children: <Widget>[
@@ -93,7 +93,7 @@ class _CreateAlbumPageState extends State<CreateAlbumPage> {
   }
 
   Future<album.Album> createAlbum() async {
-    var url = Uri.parse('http://127.0.0.1:8000/album/create-album-flutter/');
+    var url = Uri.parse('https://riviu-buku-d07-tk.pbp.cs.ui.ac.id/album/create-album-flutter/');
 
     var response = await http.post(
       url,
@@ -110,9 +110,11 @@ class _CreateAlbumPageState extends State<CreateAlbumPage> {
       // If the server returns a 201 Created response, the album was created successfully.
       print('Album created successfully');
 
-      // Parse the JSON response and return the Album object
       Map<String, dynamic> jsonResponse = json.decode(response.body);
-      return album.Album.fromJson(jsonResponse['album']);
+      List<dynamic> albumList = json.decode(jsonResponse['album']);
+      Map<String, dynamic> albumMap = albumList[0];
+
+      return album.Album.fromJson(albumMap);
     } else {
       // If the server returns an error response, print the error message and return null.
       print('Failed to create album: ${response.statusCode}');
@@ -239,15 +241,40 @@ class _CreateAlbumPageState extends State<CreateAlbumPage> {
             ),
             ElevatedButton(
               onPressed: () async {
-                // TODO: Implement create album functionality
-                album.Album createdAlbum = await createAlbum();
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => AlbumDetailsPage(album: createdAlbum, user: user)),
-                );
+                // Check if title and description are not empty and at least one book is selected
+                if (_nameController.text.trim().isEmpty ||
+                    _descriptionController.text.trim().isEmpty ||
+                    _selectedBooks.isEmpty) {
+                  // Show a dialog or a snackbar to inform the user about the missing information
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('Incomplete Information'),
+                        content: Text('Please enter album title and description, and select at least one book.'),
+                        actions: <Widget>[
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text('OK'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                } else {
+                  // All conditions are met, proceed with creating the album
+                  album.Album createdAlbum = await createAlbum();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => AlbumDetailsPage(album: createdAlbum, user: user)),
+                  );
+                }
               },
               child: Text('Create'),
             ),
+
           ],
         ),
       ),

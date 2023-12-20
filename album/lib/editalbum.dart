@@ -34,7 +34,7 @@ class _EditAlbumPageState extends State<EditAlbumPage> {
   }
 
   Future<List<book_model.Book>> fetchBooks() async {
-    final response = await http.get(Uri.parse('http://127.0.0.1:8000/json/'));
+    final response = await http.get(Uri.parse('https://riviu-buku-d07-tk.pbp.cs.ui.ac.id/json/'));
 
     if (response.statusCode == 200) {
       List<book_model.Book> books = book_model.bookFromJson(response.body);
@@ -143,7 +143,7 @@ class _EditAlbumPageState extends State<EditAlbumPage> {
 
   Future<void> updateAlbum() async {
     var url = Uri.parse(
-        'http://127.0.0.1:8000/album/edit-album-flutter/${widget.album.fields.slug}/');
+        'https://riviu-buku-d07-tk.pbp.cs.ui.ac.id/album/edit-album-flutter/${widget.album.fields.slug}/');
 
     var response = await http.post(
       url,
@@ -168,7 +168,7 @@ class _EditAlbumPageState extends State<EditAlbumPage> {
   // Function to delete the album
   Future<void> deleteAlbum() async {
     var url = Uri.parse(
-        'http://127.0.0.1:8000/album/delete-album-flutter/${widget.album.fields.slug}/');
+        'https://riviu-buku-d07-tk.pbp.cs.ui.ac.id/album/delete-album-flutter/${widget.album.fields.slug}/');
 
     var response = await http.delete(url);
 

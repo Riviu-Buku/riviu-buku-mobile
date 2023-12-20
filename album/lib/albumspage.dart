@@ -18,7 +18,7 @@ class _AlbumsPageState extends State<AlbumsPage> {
   String _searchQuery = '';
 
   Future<List<Album>> fetchAlbums() async {
-    final response = await http.get(Uri.parse('http://127.0.0.1:8000/album/json/'));
+    final response = await http.get(Uri.parse('https://riviu-buku-d07-tk.pbp.cs.ui.ac.id/album/json/'));
 
     if (response.statusCode == 200) {
       List<Album> albums = albumFromJson(response.body);

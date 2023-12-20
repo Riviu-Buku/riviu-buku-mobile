@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:review/reviewpage.dart';
 import 'package:album/editalbum.dart';
+import 'package:album/albumspage.dart';
 
 class AlbumDetailsPage extends StatefulWidget {
   final Album album;
@@ -18,7 +19,7 @@ class AlbumDetailsPage extends StatefulWidget {
 
 class _AlbumDetailsPageState extends State<AlbumDetailsPage> {
   Future<List<Book>> fetchBooksForAlbum(Album album) async {
-    var url = Uri.parse('http://127.0.0.1:8000/json/');
+    var url = Uri.parse('https://riviu-buku-d07-tk.pbp.cs.ui.ac.id/json/');
     var response = await http.get(
       url,
       headers: {"Content-Type": "application/json"},
@@ -47,6 +48,17 @@ class _AlbumDetailsPageState extends State<AlbumDetailsPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.album.fields.name),
+        leading: IconButton(
+          icon: Icon(Icons.home),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => AlbumsPage(user: widget.user),
+              ),
+            );
+          },
+        ),
         actions: [
           if (canEditAlbum())
             IconButton(
