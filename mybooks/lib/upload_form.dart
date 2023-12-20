@@ -195,7 +195,7 @@ Align(
         // Kirim ke Django dan tunggu respons
         // TODO: Ganti URL dan jangan lupa tambahkan trailing slash (/) di akhir URL!
         final response = await http.post(
-        Uri.parse('http://127.0.0.1:8000/upload/create-flutter/'),
+        Uri.parse('https://riviu-buku-d07-tk.pbp.cs.ui.ac.id/upload/create-flutter/'),
         body: jsonEncode(<String, String>{
             'title': _name,
             'rating': _penulis,
