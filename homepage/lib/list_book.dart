@@ -1,186 +1,237 @@
-// ignore_for_file: depend_on_referenced_packages, library_private_types_in_public_api, avoid_print, non_constant_identifier_names
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:riviu_buku/models/book.dart';
 import 'package:review/reviewpage.dart';
 import 'package:riviu_buku/left_drawer.dart';
-
 import 'package:riviu_buku/models/user.dart';
 import 'package:riviu_buku/provider/user_provider.dart';
 
 class Homepage extends StatefulWidget {
-    final User user;
-    const Homepage({Key? key, required this.user}) : super(key: key);
+  final User user;
 
-    @override
-    _ProductPageState createState() => _ProductPageState();
+  const Homepage({Key? key, required this.user}) : super(key: key);
+
+  @override
+  _ProductPageState createState() => _ProductPageState();
 }
 
 class _ProductPageState extends State<Homepage> {
-Future<List<Book>> fetchBook() async {
-    // TODO: Ganti URL dan jangan lupa tambahkan trailing slash (/) di akhir URL!
-    var url = Uri.parse(
-        'http://127.0.0.1:8000/json/'
-        // TODO: 
-        // 'https://riviu-buku-d07-tk.pbp.cs.ui.ac.id/json/'
-        );
+  late List<Book> _allBooks;
+  late List<Book> _filteredBooks;
+  TextEditingController _searchController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _filteredBooks = [];
+    _allBooks = [];
+    fetchBook().then((books) {
+      setState(() {
+        _allBooks = books;
+        _filteredBooks = books;
+      });
+    });
+  }
+
+  Future<List<Book>> fetchBook() async {
+    var url = Uri.parse('https://riviu-buku-d07-tk.pbp.cs.ui.ac.id/json/');
     var response = await http.get(
-        url,
-        headers: {"Content-Type": "application/json"},
+      url,
+      headers: {"Content-Type": "application/json"},
     );
 
-    // melakukan decode response menjadi bentuk json
-    // print("fetch gitu 3");
     var data = jsonDecode(utf8.decode(response.bodyBytes));
-    // print("fetch gitu 2");
-
-    // melakukan konversi data json menjadi object Product
-    List<Book> list_book = [];
-    //TODO: Comment line dibawah (hanya nampilin 1 buku)
-    // print("fetch gitu 1");
-    // print(data[0]);
-    // list_book.add(Book.fromJson(data[0]));
-    // list_book.add(Book.fromJson(data[1]));
-    // list_book.add(Book.fromJson(data[2]));
-    // list_book.add(Book.fromJson(data[3]));
-    // print(data[97]);
-    // list_book.add(Book.fromJson(data[97]));
-
-    /// The line `print("fetch gitu");` is used to print the message "fetch gitu" to the console. It is
-    /// used as a debugging statement to check if the code execution reaches that point.
-    // print("fetch gitu");
-    //TODO: Uncomment line dibawah buat nampilin semua data buku (berat 100>)
-    // var i = 100;
+    List<Book> listBook = [];
     for (var d in data) {
-        if (d != null) {
-            list_book.add(Book.fromJson(d));
-        }
+      if (d != null) {
+        listBook.add(Book.fromJson(d));
+      }
     }
-    return list_book;
-}
+    return listBook;
+  }
 
-@override
-Widget build(BuildContext context) {
-  User user = widget.user;
+  void _filterBooks(String query) {
+    setState(() {
+      _filteredBooks = _allBooks
+          .where((book) =>
+              book.fields?.title?.toLowerCase().contains(query.toLowerCase()) ??
+              false)
+          .toList();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    User user = widget.user;
     return Scaffold(
-        appBar: AppBar(
-            title: Text('Daftar Buku',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
+      appBar: AppBar(
+        title: const Text(
+          'Daftar Buku',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
+        backgroundColor: const Color.fromRGBO(147, 129, 255, 1.000),
+        foregroundColor: Colors.white,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
+      drawer: LeftDrawer(user: user),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              controller: _searchController,
+              onChanged: (query) {
+                _filterBooks(query);
+              },
+              decoration: InputDecoration(
+                hintText: 'Search by title',
+                suffixIcon: IconButton(
+                  icon: Icon(Icons.clear),
+                  onPressed: () {
+                    _searchController.clear();
+                    _filterBooks('');
+                  },
                 ),
               ),
-            backgroundColor: Color.fromRGBO(147, 129, 255, 1.000),
-            foregroundColor: Colors.white,
-            leading: IconButton(
-              icon: Icon(Icons.arrow_back),
-              onPressed: () {
-                Navigator.pop(context); // Pop the navigator when the back button is pressed
-              },
             ),
           ),
-        drawer: LeftDrawer(user: user),
-        body: FutureBuilder(
-            future: fetchBook(),
-            builder: (context, AsyncSnapshot snapshot) {
-                if (snapshot.data == null) {
-                    return const Center(child: CircularProgressIndicator());
-                } else {
-                    if (!snapshot.hasData) {
-                    return const Column(
-                        children: [
-                        Text(
-                            "Tidak ada data buku.",
-                            style:
-                                TextStyle(color: Color(0xff59A5D8), fontSize: 20),
-                        ),
-                        SizedBox(height: 8),
-                        ],
-                    );
-                } else {
-                    return GridView.builder(
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2, // Number of items in each row
-                          crossAxisSpacing: 16.0, // Spacing between items horizontally
-                          mainAxisSpacing: 16.0, // Spacing between items vertically
-                        ),
-                        itemCount: snapshot.data!.length,
-                        // itemCount: 5,
-                        itemBuilder: (_, index) => GestureDetector(
-                                onTap: () {
-                                  // Navigate to the detail item page
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context){
-                                        return ReviewPage(
-                                          book: snapshot.data![index], user: user,
-                                        );
-                                      }
-                                    ),
-                                  );
-                                },
-                              
-                                child: Card(
-                                  //margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                                  //padding: const EdgeInsets.all(20.0),
-                                  elevation: 5,
-                                  child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  /*
-                                  SizedBox(height: 20),
-                                  Image.network(
-                                    snapshot.data![index].fields?.coverImg ?? "",
-                                    height: 200,
-                                    width: 150,
-                                  ),
-                                  Text(
-                                    "${snapshot.data![index].fields.title}",
-                                    style: const TextStyle(
-                                      fontSize: 18.0,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  */
-                                  Expanded(
-                                    child: Image.network(
-                                      snapshot.data![index].fields?.coverImg ?? "",
-                                      //fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                  /*
-                                  Container(
-                                    height: 100,
-                                    decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                        image: NetworkImage(
-                                          snapshot.data![index].fields?.coverImg ?? "",
-                                        ),
-                                        //fit: BoxFit.cover
-                                      )
-                                    ),
-                                  ),
-                                  */
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text(
-                                      "${snapshot.data![index].fields.title}",
-                                      style: const TextStyle(
-                                        fontSize: 14.0,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                ],
+          Expanded(
+            child: _filteredBooks.isEmpty
+                ? Center(
+                    child: _searchController.text.isEmpty
+                        ? const CircularProgressIndicator()
+                        : const Text('Judul buku tidak ditemukan'),
+                  )
+                : GridView.builder(
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 16.0,
+                      mainAxisSpacing: 16.0,
+                    ),
+                    itemCount: _filteredBooks.length,
+                    itemBuilder: (_, index) => GestureDetector(
+                      onTap: () {
+                        // ... (your existing code)
+                      },
+                      child: Card(
+                        elevation: 5,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Expanded(
+                              child: Image.network(
+                                _filteredBooks[index].fields?.coverImg ?? "",
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                "${_filteredBooks[index].fields?.title}",
+                                style: const TextStyle(
+                                  fontSize: 14.0,
+                                  fontWeight: FontWeight.bold,
                                 ),
-                            )));
-                    }
-              }
-            }));
-    }
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class BookSearchDelegate extends SearchDelegate<String> {
+  final List<Book> books;
+
+  BookSearchDelegate(this.books);
+
+  @override
+  List<Widget> buildActions(BuildContext context) {
+    return [
+      IconButton(
+        icon: Icon(Icons.clear),
+        onPressed: () {
+          query = "";
+          showSuggestions(context);
+        },
+      ),
+    ];
+  }
+
+  @override
+  Widget buildLeading(BuildContext context) {
+    return IconButton(
+      icon: Icon(Icons.arrow_back),
+      onPressed: () {
+        close(context, "");
+      },
+    );
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    return _buildSearchResults();
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    return _buildSearchResults();
+  }
+
+ Widget _buildSearchResults() {
+    final filteredBooks = books
+        .where((book) =>
+            book.fields?.title?.toLowerCase().contains(query.toLowerCase()) ??
+            false)
+        .toList();
+
+    return GridView.builder(
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        crossAxisSpacing: 16.0,
+        mainAxisSpacing: 16.0,
+      ),
+      itemCount: filteredBooks.length,
+      itemBuilder: (_, index) => Card(
+        elevation: 5,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+              child: Image.network(
+                filteredBooks[index].fields?.coverImg ?? "",
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                "${filteredBooks[index].fields?.title}",
+                style: const TextStyle(
+                  fontSize: 14.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
