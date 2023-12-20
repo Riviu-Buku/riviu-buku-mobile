@@ -56,7 +56,7 @@ class _AlbumDetailsPageState extends State<AlbumDetailsPage> {
         leading: IconButton(
           icon: Icon(Icons.home),
           onPressed: () {
-            Navigator.push(
+            Navigator.pushReplacement(
               context,
               MaterialPageRoute(
                 builder: (context) => AlbumsPage(user: widget.user),

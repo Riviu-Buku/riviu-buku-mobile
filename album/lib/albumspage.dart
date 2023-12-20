@@ -30,7 +30,7 @@ class _AlbumsPageState extends State<AlbumsPage> {
 
 
   void viewAlbum(Album album, User user) {
-    Navigator.push(
+    Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => AlbumDetailsPage(album: album, user: user)),
     );

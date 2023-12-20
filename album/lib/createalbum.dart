@@ -337,7 +337,7 @@ class _CreateAlbumPageState extends State<CreateAlbumPage> {
                     } else {
                       // All conditions are met, proceed with creating the album
                       album.Album createdAlbum = await createAlbum();
-                      Navigator.push(
+                      Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(builder: (context) => AlbumDetailsPage(album: createdAlbum, user: user)),
                       );
