@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:homepage/list_book.dart';
+import 'package:homepage/list_book_dua.dart';
 import 'package:profile/screens/profilepage.dart';
 import 'package:riviu_buku/models/user.dart';
 import 'package:album/albumspage.dart';
@@ -19,6 +20,7 @@ class MyHomePage extends StatelessWidget {
     ShopItem("Logout", Icons.logout, Color.fromARGB(255, 224, 97, 97)),
     ShopItem("Albums", Icons.collections_bookmark, const Color.fromARGB(255, 112, 165, 208)),
     ShopItem("Profile", Icons.account_circle, Color.fromARGB(255, 255, 195, 98)),
+    ShopItem("Search Buku", Icons.photo_album, Color.fromARGB(255, 193, 255, 172)),
   ];
 
   void _navigateToPage(String itemName, BuildContext context) {
@@ -53,6 +55,12 @@ class MyHomePage extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => Homepage(user: user)),
+        );
+        break;
+      case "Search Buku":
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => Searchpage(user: user)),
         );
         break;
       case "Profile":

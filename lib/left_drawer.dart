@@ -6,6 +6,7 @@ import 'package:riviu_buku/authentication/menu.dart';
 import 'package:homepage/list_book.dart';
 import 'package:riviu_buku/models/user.dart';
 import 'package:mybooks/mybooks.dart';
+import 'package:album/albumspage.dart';
 
 class LeftDrawer extends StatelessWidget {
   final User user;
@@ -90,6 +91,18 @@ class LeftDrawer extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                   builder: (context) => ProfilePage(user: user)),
+                );
+              },
+          ),
+          ListTile(
+            leading: const Icon(Icons.photo_album),
+            title: const Text('Album'),
+            onTap: () {
+                // Route menu ke halaman produk
+                Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => AlbumsPage(user: user)),
                 );
               },
           ),
