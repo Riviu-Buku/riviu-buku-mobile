@@ -31,28 +31,12 @@ Future<List<Book>> fetchBook() async {
         headers: {"Content-Type": "application/json"},
     );
 
-    // melakukan decode response menjadi bentuk json
-    // print("fetch gitu 3");
     var data = jsonDecode(utf8.decode(response.bodyBytes));
-    // print("fetch gitu 2");
 
     // melakukan konversi data json menjadi object Product
     List<Book> list_book = [];
     //TODO: Comment line dibawah (hanya nampilin 1 buku)
-    // print("fetch gitu 1");
-    // print(data[0]);
-    // list_book.add(Book.fromJson(data[0]));
-    // list_book.add(Book.fromJson(data[1]));
-    // list_book.add(Book.fromJson(data[2]));
-    // list_book.add(Book.fromJson(data[3]));
-    // print(data[97]);
-    // list_book.add(Book.fromJson(data[97]));
 
-    /// The line `print("fetch gitu");` is used to print the message "fetch gitu" to the console. It is
-    /// used as a debugging statement to check if the code execution reaches that point.
-    // print("fetch gitu");
-    //TODO: Uncomment line dibawah buat nampilin semua data buku (berat 100>)
-    // var i = 100;
     for (var d in data) {
         if (d != null) {
             list_book.add(Book.fromJson(d));
