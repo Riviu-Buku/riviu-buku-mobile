@@ -48,8 +48,8 @@ class _CreateAlbumPageState extends State<CreateAlbumPage> {
       itemCount: _selectedBooks.length,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
-        crossAxisSpacing: 4.0,
-        mainAxisSpacing: 4.0,
+        crossAxisSpacing: 10.0,
+        mainAxisSpacing: 10.0,
       ),
       itemBuilder: (BuildContext context, int index) {
         book.Book selectedBook = _books[_selectedBooks[index]]!;
@@ -59,8 +59,12 @@ class _CreateAlbumPageState extends State<CreateAlbumPage> {
             // TODO: Implement onTap functionality if needed
           },
           child: Card(
+            elevation: 5.0,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15.0),
+            ),
             child: Stack(
-              alignment: Alignment.center,
+              alignment: Alignment.topRight,
               children: <Widget>[
                 Column(
                   children: <Widget>[
@@ -70,13 +74,16 @@ class _CreateAlbumPageState extends State<CreateAlbumPage> {
                         fit: BoxFit.cover,
                       ),
                     ),
-                    Text((bookFields.title) ?? 'Default Title'),
+                    Text(
+                      (bookFields.title) ?? 'Default Title',
+                      style: TextStyle(color: Color.fromARGB(255, 107, 66, 117)),
+                    ),
                   ],
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: IconButton(
-                    icon: Icon(Icons.delete, color: Colors.red),
+                    icon: Icon(Icons.delete, color: Color.fromRGBO(147, 129, 255, 1.000)),
                     onPressed: () {
                       setState(() {
                         _selectedBooks.removeAt(index);
@@ -91,6 +98,7 @@ class _CreateAlbumPageState extends State<CreateAlbumPage> {
       },
     );
   }
+
 
   Future<album.Album> createAlbum() async {
     var url = Uri.parse('https://riviu-buku-d07-tk.pbp.cs.ui.ac.id/album/create-album-flutter/');
@@ -129,155 +137,226 @@ class _CreateAlbumPageState extends State<CreateAlbumPage> {
     User user = widget.user;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Create a new album'),
+        title: Text(
+          'Create a new album',
+          style: TextStyle(fontFamily: 'Roboto', fontWeight: FontWeight.bold),
+        ),
+        backgroundColor: Color.fromRGBO(147, 129, 255, 1.000),
+        foregroundColor: Colors.white,
       ),
-      body: Padding(
-        padding: EdgeInsets.all(16.0),
-    child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text('Name:', style: TextStyle(fontWeight: FontWeight.bold)),
-            TextField(
-              controller: _nameController,
-              decoration: InputDecoration(
-                hintText: 'Enter album name',
-              ),
-            ),
-            SizedBox(height: 16.0),
-            Text('Description:', style: TextStyle(fontWeight: FontWeight.bold)),
-            TextField(
-              controller: _descriptionController,
-              decoration: InputDecoration(
-                hintText: 'Enter album description',
-              ),
-              maxLines: 2,
-            ),
-            SizedBox(height: 16.0),
-            Text('Search for books:', style: TextStyle(fontWeight: FontWeight.bold)),
-            TextField(
-              controller: _searchController,
-              decoration: InputDecoration(
-                hintText: 'Search for books',
-              ),
-              onChanged: (value) {
-                // Call fetchBooks when the search query changes
-                setState(() {});
-              },
-            ),
-            SizedBox(height: 16.0),
-            Text('Add books to your album', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0)),
-            FutureBuilder(
-              future: fetchBooks(),
-              builder: (context, AsyncSnapshot<List<book.Book>> snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
-                } else if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}');
-                } else {
-                  return Column(
-                    children: <Widget>[
-                      Container(
-                        height: 500,
-                        child: GridView.builder(
-                          itemCount: snapshot.data!.length,
-                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            crossAxisSpacing: 4.0,
-                            mainAxisSpacing: 4.0,
-                          ),
-                          itemBuilder: (BuildContext context, int index) {
-                            return Card(
-                              child: Column(
-                                children: <Widget>[
-                                  Expanded(
-                                    child: Image.network(
-                                      snapshot.data![index].fields?.coverImg ?? "",
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                  Text((snapshot.data![index].fields?.title) ?? 'Default Title'),
-                                  ElevatedButton(
-                                    onPressed: () {
-                                      setState(() {
-                                        if (snapshot.data![index].pk != null) {
-                                          _selectedBooks.add(snapshot.data![index].pk!);
-                                          _books[snapshot.data![index].pk!] = snapshot.data![index];
-                                        }
-                                      });
-                                    },
-                                    child: Text('Add to Album'),
-                                  ),
-                                  ElevatedButton(
-                                    onPressed: () {Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                            builder: (context){
-                            return ReviewPage(
-                            book: snapshot.data![index], user: user,
-                            );
-                            }
-                            ),
-                            );
-                                      },
-                                    child: Text('View Book'),
-                                  ),
-                                ],
+      body: Container(
+        height: MediaQuery.of(context).size.height,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Color.fromARGB(255, 191, 156, 239),
+              Color.fromARGB(255, 216, 191, 247),
+              Color.fromARGB(255, 255, 223, 182),
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: Padding(
+          padding: EdgeInsets.all(16.0),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  'Name:',
+                  style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+                ),
+                TextField(
+                  controller: _nameController,
+                  decoration: InputDecoration(
+                    hintText: 'Enter album name',
+                    fillColor: Colors.white.withOpacity(0.8),
+                    filled: true,
+                  ),
+                ),
+                SizedBox(height: 16.0),
+                Text(
+                  'Description:',
+                  style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+                ),
+                TextField(
+                  controller: _descriptionController,
+                  decoration: InputDecoration(
+                    hintText: 'Enter album description',
+                    fillColor: Colors.white.withOpacity(0.8),
+                    filled: true,
+                  ),
+                  maxLines: 2,
+                ),
+                SizedBox(height: 16.0),
+                Text(
+                  'Search for books:',
+                  style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+                ),
+                TextField(
+                  controller: _searchController,
+                  decoration: InputDecoration(
+                    hintText: 'Search for books',
+                    fillColor: Colors.white.withOpacity(0.8),
+                    filled: true,
+                  ),
+                  onChanged: (value) {
+                    // Call fetchBooks when the search query changes
+                    setState(() {});
+                  },
+                ),
+                SizedBox(height: 16.0),
+                Text(
+                  'Add books to your album',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0, color: Colors.white),
+                ),
+                FutureBuilder(
+                  future: fetchBooks(),
+                  builder: (context, AsyncSnapshot<List<book.Book>> snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(child: CircularProgressIndicator());
+                    } else if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    } else {
+                      return Column(
+                        children: <Widget>[
+                          Container(
+                            height: 500,
+                            child: GridView.builder(
+                              itemCount: snapshot.data!.length,
+                              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                crossAxisSpacing: 10.0,
+                                mainAxisSpacing: 10.0,
                               ),
-                            );
-                          },
-                        ),
-                      ),
-                    ],
-                  );
-                }
-              },
-            ),
-            SizedBox(height: 16.0),
-            Text('Selected Books:', style: TextStyle(fontWeight: FontWeight.bold)),
-            Container(
-              height: 200, // Adjust the height as needed
-              child: buildSelectedBooks(),
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                // Check if title and description are not empty and at least one book is selected
-                if (_nameController.text.trim().isEmpty ||
-                    _descriptionController.text.trim().isEmpty ||
-                    _selectedBooks.isEmpty) {
-                  // Show a dialog or a snackbar to inform the user about the missing information
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Text('Incomplete Information'),
-                        content: Text('Please enter album title and description, and select at least one book.'),
-                        actions: <Widget>[
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: Text('OK'),
+                              itemBuilder: (BuildContext context, int index) {
+                                return Card(
+                                  elevation: 5.0,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15.0),
+                                  ),
+                                  child: Column(
+                                    children: <Widget>[
+                                      Expanded(
+                                        child: Image.network(
+                                          snapshot.data![index].fields?.coverImg ?? "",
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                      Text(
+                                        (snapshot.data![index].fields?.title) ?? 'Default Title',
+                                        style: TextStyle(color: Color.fromARGB(255, 107, 66, 117)),
+                                      ),
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          setState(() {
+                                            if (snapshot.data![index].pk != null) {
+                                              _selectedBooks.add(snapshot.data![index].pk!);
+                                              _books[snapshot.data![index].pk!] = snapshot.data![index];
+                                            }
+                                          });
+                                        },
+                                        child: Text(
+                                          'Add to Album',
+                                          style: TextStyle(
+                                            fontFamily: 'Roboto',
+                                          ),
+                                        ),
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Color.fromRGBO(147, 129, 255, 1.000),
+                                        ),
+                                      ),
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) {
+                                                  return ReviewPage(
+                                                    book: snapshot.data![index], user: user,
+                                                  );
+                                                }
+                                            ),
+                                          );
+                                        },
+                                        child: Text(
+                                          'View Book',
+                                          style: TextStyle(
+                                            fontFamily: 'Roboto',
+                                          ),
+                                        ),
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Color.fromRGBO(147, 129, 255, 1.000),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            ),
                           ),
                         ],
                       );
-                    },
-                  );
-                } else {
-                  // All conditions are met, proceed with creating the album
-                  album.Album createdAlbum = await createAlbum();
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => AlbumDetailsPage(album: createdAlbum, user: user)),
-                  );
-                }
-              },
-              child: Text('Create'),
+                    }
+                  },
+                ),
+                SizedBox(height: 16.0),
+                Text(
+                  'Selected Books:',
+                  style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+                ),
+                Container(
+                  height: 200, // Adjust the height as needed
+                  child: buildSelectedBooks(),
+                ),
+                ElevatedButton(
+                  onPressed: () async {
+                    // Check if title and description are not empty and at least one book is selected
+                    if (_nameController.text.trim().isEmpty ||
+                        _descriptionController.text.trim().isEmpty ||
+                        _selectedBooks.isEmpty) {
+                      // Show a dialog or a snackbar to inform the user about the missing information
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text('Incomplete Information'),
+                            content: Text('Please enter album title and description, and select at least one book.'),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text('OK'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    } else {
+                      // All conditions are met, proceed with creating the album
+                      album.Album createdAlbum = await createAlbum();
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => AlbumDetailsPage(album: createdAlbum, user: user)),
+                      );
+                    }
+                  },
+                  child: Text(
+                    'Create',
+                    style: TextStyle(
+                      fontFamily: 'Roboto',
+                    ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color.fromRGBO(147, 129, 255, 1.000),
+                  ),
+                ),
+              ],
             ),
-
-          ],
+          ),
         ),
-      ),
       ),
     );
   }

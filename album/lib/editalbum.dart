@@ -70,8 +70,8 @@ class _EditAlbumPageState extends State<EditAlbumPage> {
             itemCount: _selectedBooks.length,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
-              crossAxisSpacing: 4.0,
-              mainAxisSpacing: 4.0,
+              crossAxisSpacing: 10.0,
+              mainAxisSpacing: 10.0,
             ),
             itemBuilder: (BuildContext context, int index) {
               final int bookId = _selectedBooks[index];
@@ -95,6 +95,10 @@ class _EditAlbumPageState extends State<EditAlbumPage> {
                     );
                   },
                   child: Card(
+                    elevation: 5.0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15.0),
+                    ),
                     child: Stack(
                       alignment: Alignment.topRight,
                       children: <Widget>[
@@ -106,13 +110,16 @@ class _EditAlbumPageState extends State<EditAlbumPage> {
                                 fit: BoxFit.cover,
                               ),
                             ),
-                            Text((bookFields.title) ?? 'Default Title'),
+                            Text(
+                              (bookFields.title) ?? 'Default Title',
+                              style: TextStyle(color: Color.fromARGB(255, 107, 66, 117)),
+                            ),
                           ],
                         ),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: IconButton(
-                            icon: Icon(Icons.delete, color: Colors.red),
+                            icon: Icon(Icons.delete, color: Color.fromRGBO(147, 129, 255, 1.000)),
                             onPressed: () {
                               setState(() {
                                 _selectedBooks.removeAt(index);
@@ -211,15 +218,27 @@ class _EditAlbumPageState extends State<EditAlbumPage> {
                     );
                   },
                   child: Text('Delete'),
+                  style: TextButton.styleFrom(
+                    foregroundColor: Color.fromRGBO(147, 129, 255, 1.000),
+                  ),
                 ),
               ],
             );
           },
         );
       },
-      child: Text('Delete Album'),
+      child: Text(
+        'Delete Album',
+        style: TextStyle(
+          fontFamily: 'Roboto',
+        ),
+      ),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Color.fromRGBO(147, 129, 255, 1.000),
+      ),
     );
   }
+
 
 
   @override
@@ -227,132 +246,203 @@ class _EditAlbumPageState extends State<EditAlbumPage> {
     User user = widget.user;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Edit album'),
+        title: Text(
+          'Edit album',
+          style: TextStyle(fontFamily: 'Roboto', fontWeight: FontWeight.bold),
+        ),
+        backgroundColor: Color.fromRGBO(147, 129, 255, 1.000),
+        foregroundColor: Colors.white,
         actions: [
           // Add the delete button to the app bar
           buildDeleteButton(),
         ],
       ),
-      body: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text('Name:', style: TextStyle(fontWeight: FontWeight.bold)),
-              TextField(
-                controller: _nameController,
-                decoration: InputDecoration(
-                  hintText: 'Enter album name',
-                ),
-              ),
-              SizedBox(height: 16.0),
-              Text('Description:', style: TextStyle(fontWeight: FontWeight.bold)),
-              TextField(
-                controller: _descriptionController,
-                decoration: InputDecoration(
-                  hintText: 'Enter album description',
-                ),
-                maxLines: 2,
-              ),
-              SizedBox(height: 16.0),
-              Text('Search for books:', style: TextStyle(fontWeight: FontWeight.bold)),
-              TextField(
-                controller: _searchController,
-                decoration: InputDecoration(
-                  hintText: 'Search for books',
-                ),
-                onChanged: (value) {
-                  // Call fetchBooks when the search query changes
-                  setState(() {});
-                },
-              ),
-              SizedBox(height: 16.0),
-              Text('Add books to your album', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0)),
-              FutureBuilder(
-                future: fetchBooks(),
-                builder: (context, AsyncSnapshot<List<book_model.Book>> snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
-                  } else if (snapshot.hasError) {
-                    return Text('Error: ${snapshot.error}');
-                  } else {
-                    return Column(
-                      children: <Widget>[
-                        Container(
-                          height: 200,
-                          child: GridView.builder(
-                            itemCount: snapshot.data!.length,
-                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              crossAxisSpacing: 4.0,
-                              mainAxisSpacing: 4.0,
-                            ),
-                            itemBuilder: (BuildContext context, int index) {
-                              return Card(
-                                child: Column(
-                                  children: <Widget>[
-                                    Expanded(
-                                      child: Image.network(
-                                        snapshot.data![index].fields?.coverImg ?? "",
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                    Text((snapshot.data![index].fields?.title) ?? 'Default Title'),
-                                    ElevatedButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          if (snapshot.data![index].pk != null) {
-                                            _selectedBooks.add(snapshot.data![index].pk!);
-                                            _books[snapshot.data![index].pk!] = snapshot.data![index];
-                                          }
-                                        });
-                                      },
-                                      child: Text('Add to Album'),
-                                    ),
-                                    ElevatedButton(
-                                      onPressed: () {Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context){
-                                              return ReviewPage(
-                                                book: snapshot.data![index], user: user,
-                                              );
-                                            }
-                                        ),
-                                      );
-                                      },
-                                      child: Text('View Book'),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                      ],
-                    );
-                  }
-                },
-              ),
-              SizedBox(height: 16.0),
-              Text('Selected Books:', style: TextStyle(fontWeight: FontWeight.bold)),
-              Container(
-                height: 200, // Adjust the height as needed
-                child: buildSelectedBooks(),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  // TODO: Implement create album functionality
-                  updateAlbum();
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => AlbumDetailsPage(album: widget.album, user: user)),
-                  );
-                },
-                child: Text('Update'),
-              ),
+      body: Container(
+        height: MediaQuery.of(context).size.height,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Color.fromARGB(255, 191, 156, 239),
+              Color.fromARGB(255, 216, 191, 247),
+              Color.fromARGB(255, 255, 223, 182),
             ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: Padding(
+          padding: EdgeInsets.all(16.0),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  'Name:',
+                  style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+                ),
+                TextField(
+                  controller: _nameController,
+                  decoration: InputDecoration(
+                    hintText: 'Enter album name',
+                    fillColor: Colors.white.withOpacity(0.8),
+                    filled: true,
+                  ),
+                ),
+                SizedBox(height: 16.0),
+                Text(
+                  'Description:',
+                  style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+                ),
+                TextField(
+                  controller: _descriptionController,
+                  decoration: InputDecoration(
+                    hintText: 'Enter album description',
+                    fillColor: Colors.white.withOpacity(0.8),
+                    filled: true,
+                  ),
+                  maxLines: 2,
+                ),
+                SizedBox(height: 16.0),
+                Text(
+                  'Search for books:',
+                  style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+                ),
+                TextField(
+                  controller: _searchController,
+                  decoration: InputDecoration(
+                    hintText: 'Search for books',
+                    fillColor: Colors.white.withOpacity(0.8),
+                    filled: true,
+                  ),
+                  onChanged: (value) {
+                    // Call fetchBooks when the search query changes
+                    setState(() {});
+                  },
+                ),
+                SizedBox(height: 16.0),
+                Text(
+                  'Add books to your album',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0, color: Colors.white),
+                ),
+                FutureBuilder(
+                  future: fetchBooks(),
+                  builder: (context, AsyncSnapshot<List<book_model.Book>> snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(child: CircularProgressIndicator());
+                    } else if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    } else {
+                      return Column(
+                        children: <Widget>[
+                          Container(
+                            height: 200,
+                            child: GridView.builder(
+                              itemCount: snapshot.data!.length,
+                              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                crossAxisSpacing: 10.0,
+                                mainAxisSpacing: 10.0,
+                              ),
+                              itemBuilder: (BuildContext context, int index) {
+                                return Card(
+                                  elevation: 5.0,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15.0),
+                                  ),
+                                  child: Column(
+                                    children: <Widget>[
+                                      Expanded(
+                                        child: Image.network(
+                                          snapshot.data![index].fields?.coverImg ?? "",
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                      Text(
+                                        (snapshot.data![index].fields?.title) ?? 'Default Title',
+                                        style: TextStyle(color: Color.fromARGB(255, 107, 66, 117)),
+                                      ),
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          setState(() {
+                                            if (snapshot.data![index].pk != null) {
+                                              _selectedBooks.add(snapshot.data![index].pk!);
+                                              _books[snapshot.data![index].pk!] = snapshot.data![index];
+                                            }
+                                          });
+                                        },
+                                        child: Text(
+                                          'Add to Album',
+                                          style: TextStyle(
+                                            fontFamily: 'Roboto',
+                                          ),
+                                        ),
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Color.fromRGBO(147, 129, 255, 1.000),
+                                        ),
+                                      ),
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) {
+                                                  return ReviewPage(
+                                                    book: snapshot.data![index], user: user,
+                                                  );
+                                                }
+                                            ),
+                                          );
+                                        },
+                                        child: Text(
+                                          'View Book',
+                                          style: TextStyle(
+                                            fontFamily: 'Roboto',
+                                          ),
+                                        ),
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Color.fromRGBO(147, 129, 255, 1.000),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        ],
+                      );
+                    }
+                  },
+                ),
+                SizedBox(height: 16.0),
+                Text(
+                  'Selected Books:',
+                  style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+                ),
+                Container(
+                  height: 200, // Adjust the height as needed
+                  child: buildSelectedBooks(),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    updateAlbum();
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => AlbumDetailsPage(album: widget.album, user: user)),
+                    );
+                  },
+                  child: Text(
+                    'Update',
+                    style: TextStyle(
+                      fontFamily: 'Roboto',
+                    ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color.fromRGBO(147, 129, 255, 1.000),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
